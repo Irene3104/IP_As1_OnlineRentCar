@@ -1,0 +1,1120 @@
+/* === CSS Reset & Global Styles - Modern Chic === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.65; /* Slightly more spacious line height */
+    color: #212529; /* Primary text color (near black) */
+    background-color: #FFFFFF; /* Clean white background */
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    width: 90%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: #FF5757; /* Main accent color for links */
+    transition: color 0.25s ease, opacity 0.25s ease;
+}
+
+a:hover {
+    color: #E04848; /* Darker shade of accent for hover */
+    /* text-decoration: underline; */ /* Optional: consider removing underlines for cleaner look */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1.25rem;
+    font-weight: 600; /* Semibold for headings */
+    line-height: 1.3;
+    color: #1A1A1A; /* Very dark grey for headings */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+button, .btn {
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 0.65rem 1.25rem; /* Adjusted padding for buttons */
+    border-radius: 6px; /* Slightly rounded corners */
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    font-weight: 500; /* Medium weight for button text */
+}
+
+/* Primary Button Style */
+.btn-primary {
+    background-color: #FF5757;
+    color: #FFFFFF;
+    border-color: #FF5757;
+}
+
+.btn-primary:hover {
+    background-color: #E04848;
+    border-color: #E04848;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 87, 87, 0.3);
+}
+
+/* Secondary/Default Button Style */
+.btn-secondary {
+    background-color: #E9ECEF;
+    color: #212529;
+    border-color: #DEE2E6;
+}
+
+.btn-secondary:hover {
+    background-color: #DDE2E6;
+    border-color: #CED4DA;
+    transform: translateY(-1px);
+}
+
+/* === Header - Modern Chic === */
+header {
+    background-color: #FFFFFF;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Softer, thinner shadow */
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 65px; /* Adjusted min-height */
+}
+
+.logo img {
+    max-height: 50px; /* Slightly smaller logo for a sleeker look */
+}
+
+header nav ul {
+    display: flex;
+    align-items: center;
+}
+
+header nav ul li {
+    margin-left: 30px; /* Adjusted spacing */
+}
+
+header nav ul li a {
+    color: #343A40; /* Dark grey for nav links */
+    font-weight: 500; /* Medium weight */
+    font-size: 0.9rem; /* Slightly smaller nav font */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    border-bottom: 2px solid transparent; /* For hover effect */
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+header nav ul li a i {
+    font-size: 1rem;
+    color: #6C757D; /* Muted icon color */
+    transition: color 0.2s ease;
+}
+
+header nav ul li a:hover,
+header nav ul li a.active {
+    color: #FF5757; /* Accent color on hover/active */
+    /* border-bottom-color: #FF5757; */ /* Underline effect on hover */
+    text-decoration: none;
+}
+
+header nav ul li a:hover i,
+header nav ul li a.active i {
+    color: #FF5757;
+}
+
+/* Specifically style reservation link if needed for emphasis */
+#global-reservation-link {
+    /* font-weight: 600; */
+    /* color: #FF5757; */ /* Make it stand out a bit more if desired */
+}
+
+/* === Hero Section (Skewed Red Background Design - RESTORED) === */
+.new-hero-design {
+    position: relative;
+    background-color: #FFFFFF; 
+    padding: 4rem 0; 
+    padding-bottom: 6rem; /* Added more padding to the bottom for spacing */
+    overflow: hidden; 
+    min-height: 500px; 
+    display: flex; 
+    align-items: center; 
+}
+
+.hero-background-left { /* The skewed red background element */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 55%; 
+    height: 100%;
+    background-color: #8B0000; /* Dark Red */
+    z-index: 1;
+    transform: skewX(-15deg);
+    transform-origin: top left;
+}
+
+.hero-content-wrapper {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem; 
+    /* width: 100%; Ensure it uses the .container for max-width if not already */
+}
+
+.hero-left-content { /* Left text content area */
+    color: #FFFFFF;
+    padding-right: 1rem; 
+    flex-basis: 35%; 
+    text-align: left;
+}
+
+.hero-left-content h3 {
+    font-family: 'Knewave', cursive;
+    font-weight: normal; /* Knewave is often available in a single, usually bold weight. Normal might be appropriate or can be omitted. */
+    color: #FFFFFF;
+    font-size: clamp(2.3rem, 6vw, 3.5rem); /* Adjusted for Knewave */
+    line-height: 1.3;
+    margin-bottom: 0.75rem; /* Reduced margin to bring p closer */
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+}
+
+.hero-left-content p {
+    font-family: 'Kalam', cursive; /* Applied Kalam font */
+    font-weight: 300; /* Regular weight for Kalam */
+    color: #FFFFFF; 
+    font-size: 17px; /* Adjusted for Kalam's handwriting style */
+    line-height: 1.7; /* Increased line-height for better readability of Kalam */
+    letter-spacing: 0.1px; 
+    opacity: 0.95; /* Kalam can be quite distinct, ensure good contrast/opacity */
+    /* text-shadow: 1px 1px 2px rgba(0,0,0,0.15); /* Optional: very subtle shadow */
+}
+
+.hero-car-image-container { /* Middle car image */
+    flex-basis: 35%; 
+    text-align: center; 
+    align-self: center; /* Better vertical alignment for car */
+}
+
+.hero-car-image-container img {
+    max-width: 100%;
+    display: inline-block; 
+}
+
+.hero-right-content { /* Right area, now contains the standard search/filter UI */
+    padding-left: 1rem; 
+    flex-basis: 30%; 
+    text-align: left;
+    display: flex; /* Added to help align content if needed */
+    flex-direction: column; /* Stack title and search-controls */
+    justify-content: center; /* Vertically center its content */
+    align-items: center; /* This will center h3 and search-controls if they are direct children */
+    /* background-color: #FFFFFF; */ /* Ensured by .new-hero-design */
+}
+
+/* Styles for the h3 ("Search & Filter Cars") now inside .hero-right-content */
+.hero-right-content h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.8vw, 1.7rem); /* Adjusted size for Hind Mysuru */
+    color: #1A1A1A;
+    margin-bottom: 1rem;
+    text-align: center;
+    width: 100%;
+    letter-spacing: 0.3px; /* Optional: slight letter spacing for Hind Mysuru */
+}
+
+/* Adjust .search-controls if needed when inside .hero-right-content */
+.hero-right-content .search-controls {
+    margin-bottom: 0; 
+    padding: 2.5rem 2rem 2rem 2rem; /* Adjusted padding: more top for title, then others */
+    background-color: #FFFFFF; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 30px rgba(128, 0, 0, 0.15); /* Darker and more spread shadow */
+    width: 100%; 
+    margin-top: 0; /* Title will be above, so no extra margin needed here */
+}
+
+/* Input field base style within search-controls */
+.hero-right-content .search-controls input[type="text"],
+.hero-right-content .search-controls select {
+    font-family: 'Poppins', sans-serif;
+    padding: 0.8rem 1rem; 
+    font-size: 0.95rem;
+    border: 1px solid #DDE2E6; 
+    border-radius: 8px; /* Rounded inputs/selects */
+    background-color: #F8F9FA; /* Light background for inputs */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    color: #212529;
+    width: 100%; /* Make them full width by default */
+    margin-bottom: 0.5rem; /* Reduced space below search input and selects */
+}
+
+.hero-right-content .search-controls input[type="text"]:focus,
+.hero-right-content .search-controls select:focus {
+    border-color: #FF5757;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(255, 87, 87, 0.2);
+    background-color: #FFFFFF;
+}
+
+/* Custom styling for select dropdowns */
+.hero-right-content .search-controls .filter-group select {
+    padding: 0.8rem 1rem; /* Original padding from the main input style */
+    padding-right: 2.5rem; /* Make space for custom arrow */
+    border-radius: 8px; /* Match input fields */
+    border: 1px solid #DDE2E6;
+    background-color: #F8F9FA; /* Match input fields */
+    flex-grow: 1;
+    min-width: 120px; 
+    font-size: 0.95rem; /* Match input fields */
+    color: #212529; /* Match input fields */
+    appearance: none; /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236C757D'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    margin-bottom: 0.5rem; /* Keep consistent with text input */
+}
+
+/* Style for the new Apply Filters button */
+.hero-right-content .search-controls #apply-filters {
+    background-color: #000000; /* Match Reset Filters */
+    color: #ffffff; /* Match Reset Filters */
+    border: none; /* Match Reset Filters */
+    padding: 0.75rem 1.5rem; /* Match Reset Filters new padding */
+    font-size: 1rem; /* Ensure default button font size */
+    font-weight: 600; /* Match Reset Filters */
+    flex-grow: 1;
+    margin-top: 0;
+    border-radius: 8px; /* Match Reset Filters */
+    position: relative; /* For ::after positioning */
+    z-index: 1; /* Ensure button content is above ::after */
+    overflow: hidden; /* For ::after animation */
+    transition: color 0.3s ease; /* Match Reset Filters */
+}
+
+.hero-right-content .search-controls #apply-filters::after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    background-color: #c2ff278e; /* Match Reset Filters ::after */
+    transition: width 0.3s ease; /* Match Reset Filters ::after */
+}
+
+.hero-right-content .search-controls #apply-filters:hover {
+    color: #FFFFFF; /* Match Reset Filters :hover */
+}
+
+.hero-right-content .search-controls #apply-filters:hover::after {
+    width: 100%;
+    background-color: #cc1f27; /* Match Reset Filters :hover::after */
+}
+
+.hero-right-content .search-controls #apply-filters:active {
+    top: 2px; /* Match Reset Filters :active */
+}
+
+/* Reset Filters Button Style Update */
+.hero-right-content .search-controls #reset-filters {
+    font-family: 'Poppins', sans-serif; /* Or inherit */
+    font-weight: 600;
+    padding: 0.75rem 1.5rem; /* Adjusted padding for consistency */
+    border-radius: 8px;
+    /* width: 100%; Remove to allow side-by-side */
+    flex-grow: 1; /* Allow button to grow */
+    margin-top: 0; /* Remove margin-top, was 0.5rem for stacking */
+    background-color: #000000;
+    border: none;
+    color: #ffffff; /* Default text color */
+    position: relative; /* Needed for the ::after pseudo-element positioning */
+    z-index: 1; /* Ensure button content is above ::after if ::after has z-index: -1 */
+    overflow: hidden; /* Optional: if box-shadow on ::after might peek out */
+    transition: color 0.3s ease; /* Transition for text color */
+}
+
+.hero-right-content .search-controls #reset-filters::after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 100%;
+    top: 0;
+    left: 0;
+    /* direction: rtl; /* Removed or commented out to ensure LTR fill */
+    z-index: -1;
+    background-color: #c2ff278e;
+    color: #000000; /* This is the color that will be animated FROM */
+    transition: width 0.3s ease; /* Changed transition to only width for LTR fill */
+}
+
+.hero-right-content .search-controls #reset-filters:hover {
+    color: #FFFFFF; /* Text color on hover (changed to white for contrast with red background) */
+}
+
+.hero-right-content .search-controls #reset-filters:hover::after {
+    /* left: auto; Removed */
+    /* right: 0;   Removed */
+    width: 100%; /* This will make it fill from left to right */
+    background-color: #cc1f27; /* Background color on hover */
+}
+
+.hero-right-content .search-controls #reset-filters:active {
+    top: 2px; /* Simulates button press */
+    /* transform: translateY(2px); Alternative for pressing effect */
+}
+
+/* === Search and Filter Controls - Modern Chic === */
+.search-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background-color: #FFFFFF; /* White background */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07); /* Softer, slightly more spread shadow */
+}
+
+#search-input,
+.filter-group select {
+    padding: 0.8rem 0.5rem; /* Comfortable padding */
+    font-size: 0.95rem;
+    border: 1px solid #DEE2E6; /* Light grey border */
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    color: #212529;
+}
+
+#search-input:focus,
+.filter-group select:focus {
+    border-color: #FF5757;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(255, 87, 87, 0.2);
+}
+
+#search-input::placeholder {
+    color: #ADB5BD;
+}
+
+.filter-group {
+    display: flex;
+    gap: 0.75rem; /* Spacing between filter elements */
+    align-items: center; /* Align items vertically */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens if needed */
+    margin-top: 1rem; /* Increased margin-top for spacing from selects */
+}
+
+/* Container for the buttons to sit side-by-side */
+.filter-group .button-group {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%; /* Make button group take full width */
+}
+
+.filter-group select {
+    flex-grow: 1;
+    min-width: 200px; /* Ensure select boxes have a decent minimum width */
+}
+
+#reset-filters {
+    /* Using .btn-secondary style defined globally */
+}
+
+/* === Search Suggestions - Modern Chic === */
+#suggestions-container {
+    position: relative; 
+    margin-top: -1rem; /* Overlap slightly with search input if suggestions are visible */
+    margin-bottom: 1rem; /* Add some space if suggestions are not shown */
+}
+
+.suggestions-list {
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+    background-color: #fff;
+    border: 1px solid #DEE2E6;
+    border-top: none; 
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.08);
+    position: absolute;
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 999;
+    display: none;
+}
+
+.suggestions-list li {
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #343A40;
+}
+
+.suggestions-list li:hover,
+.suggestions-list li.active-suggestion {
+    background-color: #F8F9FA;
+    color: #FF5757;
+}
+
+/* === Car Grid & Cards - Modern Chic === */
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 1.75rem; /* Increased gap for better spacing */
+    padding: 1.5rem 0; /* Padding around the grid */
+    justify-content: center; /* Center grid items if they don't fill the row */
+}
+
+.car-card {
+    background-color: #FFFFFF;
+    border-radius: 12px; /* More pronounced rounded corners */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Softer, more modern shadow */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    height: 100%; /* Make cards in the same row equal height if using CSS Grid's default alignment */
+}
+
+.car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08); /* Enhanced shadow on hover */
+}
+
+.car-card.unavailable {
+    opacity: 0.7;
+    /* filter: grayscale(50%); */ /* Optional: make unavailable cards greyscale */
+}
+
+.car-image {
+    width: 100%;
+    height: 240px; /* Fixed height for consistent card appearance */
+    object-fit: cover;
+    /* border-bottom: 1px solid #F8F9FA; */ /* Removed border for cleaner look if image touches details */
+}
+
+.car-details {
+    padding: 1.5rem; /* Generous padding within the card */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.car-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1A1A1A;
+    margin-bottom: 0.5rem;
+}
+
+.car-type,
+.car-price,
+.car-availability,
+.car-description {
+    font-size: 0.875rem; /* 14px */
+    color: #495057;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.car-description {
+    flex-grow: 1;
+    margin-bottom: 1rem;
+    font-size: 0.85rem; /* Slightly smaller for description */
+    color: #6C757D;
+}
+
+.car-price {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #212529; /* Dark price for emphasis */
+    margin-bottom: 0.75rem;
+}
+
+.car-price span.per-day {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #6C757D;
+}
+
+.car-availability {
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+}
+
+.car-card.unavailable .car-availability {
+    color: #DC3545; /* Bootstrap danger color for rented out */
+    font-weight: 600;
+}
+
+.rent-button {
+    /* Using .btn-primary style defined globally */
+    display: block; /* Make button take full width of its container if margin auto, or use align-self */
+    width: 100%;
+    margin-top: auto; /* Push button to the bottom of the card */
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.rent-button:disabled {
+    background-color: #CED4DA;
+    border-color: #CED4DA;
+    color: #6C757D;
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
+}
+
+/* === Footer - Modern Chic (assuming it exists or will be added) === */
+footer {
+    background-color: #212529; /* Dark background for footer */
+    color: #F8F9FA;
+    text-align: center;
+    padding: 3rem 0;
+    margin-top: 5rem; /* Generous space above footer */
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: #FF5757; /* Accent color for links in footer */
+}
+
+footer a:hover {
+    color: #E04848;
+    text-decoration: underline;
+}
+
+/* === Utility Classes (Can be expanded) === */
+.text-center {
+    text-align: center;
+}
+
+.mb-1 { margin-bottom: 0.5rem !important; }
+.mb-2 { margin-bottom: 1rem !important; }
+.mt-1 { margin-top: 0.5rem !important; }
+.mt-2 { margin-top: 1rem !important; }
+
+/* === Intro Screen - Simplified (Image Centered) === */
+#intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ff5757; /* Updated Coral Red background */
+    z-index: 2000;
+    display: flex; /* Use flex for centering */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.7s ease-in, transform 0.7s ease-in; /* Slide out transition */
+}
+
+#intro-screen.hidden {
+    opacity: 0;
+    transform: translateX(-100%); /* Slide to the left */
+}
+
+.intro-content { /* This container might not be strictly necessary anymore but kept for structure */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Takes full width of parent for centering child */
+    height: 100%; /* Takes full height of parent for centering child */
+}
+
+.intro-car-image-wrapper {
+    /* No longer needs absolute positioning if parent intro-content uses flex to center */
+    width: 70%; /* Adjust width of car image container as desired, e.g., 70% of screen width */
+    max-width: 600px; /* Max physical width of car image */
+    opacity: 0; /* Start transparent for animation */
+    animation: fadeInCarImage 1.2s ease-out 0.3s forwards; /* Simple fade-in and slight scale */
+}
+
+.intro-car-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@keyframes fadeInCarImage {
+    from { 
+        opacity: 0; 
+        transform: scale(0.9);
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+}
+
+/* Remove or comment out styles for .vertical-text-left, .vertical-text-right, .intro-branding-text */
+/*
+.vertical-text-left,
+.vertical-text-right {
+    display: none; 
+}
+
+.intro-branding-text {
+    display: none; 
+}
+*/
+
+/* Ensure old animation keyframes specific to other elements are removed if not used */
+/*
+@keyframes fadeInElementIntro { 
+    ...
+}
+*/
+
+/* Adjust existing body style if intro is active */
+body.intro-active {
+    /* overflow: hidden; */ /* Prevent scrolling main content while intro is visible - may not be needed if intro is fixed full screen */
+}
+
+/* Wrapper for main page content animation */
+#main-page-wrapper {
+    opacity: 0;
+    transform: translateX(50px); /* Start off-screen to the right */
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    transition-delay: 0.4s; /* Delay appearance until intro starts to slide out */
+}
+
+body.main-content-visible #main-page-wrapper {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* === Reservation Page Specific Styles === */
+#reservation-page-section .section-title {
+    text-align: center;
+    margin-bottom: 3rem; /* More space after title */
+}
+
+/* Selected Car Info Card */
+#selected-car-info-container {
+    margin-bottom: 3rem;
+    display: flex; /* To center the card if it has a max-width */
+    justify-content: center;
+}
+
+.selected-car-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E9ECEF;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    padding: 2rem;
+    display: flex; /* For side-by-side image and details */
+    flex-direction: column; /* Default stack, then row for wider screens */
+    align-items: center; /* Center items when stacked */
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 700px; /* Max width for the selected car display */
+}
+
+.selected-car-card h3 { /* "Your Selected Ride:" */
+    font-size: 1.5rem;
+    color: #1A1A1A;
+    margin-bottom: 1rem;
+    width: 100%; /* Take full width */
+    text-align: left;
+}
+
+.selected-car-image {
+    max-width: 300px; /* Control image size */
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #F8F9FA;
+}
+
+.selected-car-details {
+    flex-grow: 1;
+    text-align: left; /* Align text to left */
+}
+
+.selected-car-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.selected-car-price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #FF5757; /* Accent color for price */
+    margin-bottom: 0.3rem;
+}
+.selected-car-price .per-day {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #6C757D;
+}
+
+.selected-car-type {
+    font-size: 0.95rem;
+    color: #495057;
+    margin-bottom: 0;
+}
+
+/* Reservation Form Styles */
+#reservation-form-container {
+    background-color: #FFFFFF;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    max-width: 700px;
+    margin: 0 auto; /* Center the form */
+}
+
+#reservation-form h4 { /* "Enter Your Details:" */
+    font-size: 1.4rem;
+    color: #1A1A1A;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    color: #343A40;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="date"],
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid #DEE2E6;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    color: #212529;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="tel"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="number"]:focus {
+    border-color: #FF5757;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(255, 87, 87, 0.2);
+}
+
+.form-group input.is-invalid {
+    border-color: #DC3545; /* Bootstrap danger color for invalid fields */
+}
+
+.form-group input.is-invalid:focus {
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.error-message {
+    display: block;
+    font-size: 0.8rem;
+    color: #DC3545;
+    margin-top: 0.25rem;
+    min-height: 1.2em; /* Reserve space to prevent layout shifts */
+}
+
+.total-price-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #212529;
+}
+
+.total-price-container #total-price {
+    color: #FF5757; /* Accent for the price value */
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between; /* Or center, or flex-end */
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.form-actions button {
+    flex-grow: 1; /* Make buttons take equal space if desired */
+    padding: 0.8rem 1.5rem; /* Slightly larger buttons for actions */
+}
+
+/* Message Container on Reservation Page */
+#reservation-message-container p {
+    font-size: 1.1rem;
+    padding: 2rem;
+    background-color: #F8F9FA; /* Light background for messages */
+    border-radius: 8px;
+    border: 1px dashed #CED4DA;
+    color: #495057;
+    max-width: 700px;
+    margin: 2rem auto;
+}
+
+/* Responsive adjustments for selected car card */
+@media (min-width: 600px) {
+    .selected-car-card {
+        flex-direction: row; /* Image and details side-by-side */
+        align-items: flex-start; /* Align items to top when in row */
+        text-align: left;
+    }
+    .selected-car-card h3 {
+        text-align: left;
+    }
+    .selected-car-image {
+        max-width: 250px; /* Adjust image size for row layout */
+        flex-shrink: 0; /* Prevent image from shrinking too much */
+    }
+    .selected-car-details {
+        text-align: left;
+    }
+}
+
+/* Responsive adjustments for skewed hero with standard search filters in right content */
+@media (max-width: 992px) {
+    .hero-content-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+    .hero-left-content, .hero-right-content, .hero-car-image-container {
+        flex-basis: 100%;
+        padding-left: 1rem; /* Adjusted padding for mobile */
+        padding-right: 1rem; /* Adjusted padding for mobile */
+        text-align: center;
+    }
+    .hero-left-content h3, .hero-left-content p, .hero-right-content h3 {
+        text-align: center;
+    }
+    .hero-background-left {
+        width: 100%;
+        transform: skewX(0deg); 
+        height: 40%; 
+        min-height: 250px; /* Ensure some height for bg on mobile */
+    }
+    .hero-car-image-container {
+        order: -1; 
+        margin-bottom: 1rem;
+        margin-top: 1rem; /* Add some top margin if bg is shallow */
+    }
+    .new-hero-design {
+        padding-top: 0; /* Remove top padding if bg left handles it */
+         /* padding-bottom: 2rem; */ /* Adjust overall bottom padding */
+    }
+    .hero-left-content{
+        color: #1A1A1A; 
+        padding-top: calc(40% + 2rem); /* Push content below skewed bg band + car margin */
+        /* If text is on white on mobile, ensure dark color */
+    }
+     .hero-left-content h3, .hero-left-content p {
+        color: #1A1A1A; /* Text color when on white part on mobile */
+    }
+    .hero-right-content {
+        /* text-align: center; */ /* Search controls are better left-aligned or full width */
+        padding-top: 2rem; /* Space when stacked */
+    }
+    .hero-right-content h3 {
+        text-align: center; /* Center the "Search & Filter Cars" title on mobile */
+    }
+    .hero-right-content .search-controls {
+        /* padding: 1rem; */ /* Adjust padding on mobile if needed */
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-left-content{
+        padding-top: calc(40% + 1rem); /* Adjust for smaller car margin */
+    }
+    .hero-right-content .form-group-inline.date-group,
+    .hero-right-content .form-group-inline.time-group {
+        flex-basis: 100%; /* Stack date/time inputs */
+    }
+    .hero-right-content .btn-search-hero {
+        min-height: 58px; /* Original mobile height */
+        padding: 12px 28px; /* Original mobile padding */
+    }
+    .hero-background-left {
+        min-height: 200px;
+    }
+}
+
+/* Shared styles for scroll and search shortcut buttons */
+.scroll-button-style {
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(0,0,0,1);
+    border-radius: 50%;
+    color: white;
+    font-size: 22px; /* Slightly adjust if needed for icon consistency */
+    line-height: 50px;
+    cursor: pointer;
+    transition: transform 0.6s ease, opacity 0.6s ease; /* Removed top/right from here */
+    /* position, left, transform: translateX will be handled by the wrapper or individual buttons */
+}
+
+#scroll-search-button-wrapper {
+    position: absolute; /* Initial positioning relative to hero for #scroll */
+    /* left, top, transform will be set by JS for initial #scroll placement */
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between search and scroll buttons */
+    opacity: 0; /* Start transparent, JS will fade it in */
+    /* transition for opacity is handled by #scroll.visible, let's adjust */
+    transition: opacity 0.6s ease, top 0.6s ease, right 0.6s ease; /* For fixed positioning animation */
+}
+
+#scroll-search-button-wrapper.visible {
+    opacity: 1;
+}
+
+/* Individual button adjustments if any, e.g., if one needs specific margin */
+#search-shortcut-button {
+    display: none; /* Initially hidden, shown when wrapper is fixed */
+    background-color: #4A4A4A; /* Different background color for search button */
+}
+
+#search-shortcut-button:hover {
+    background-color: #5f5f5f; /* Slightly lighter on hover */
+}
+
+#search-shortcut-button i {
+    display: inline-block; /* Needed for transform to work reliably */
+    transition: transform 0.1s ease-out;
+}
+
+#search-shortcut-button:active i {
+    transform: scale(1.25); /* Enlarge icon on click */
+}
+
+/* #scroll specific styles (if any, most moved to .scroll-button-style) */
+#scroll {
+    /* display: none; Now handled by wrapper's opacity/visibility */
+    /* opacity: 0; Now handled by wrapper */
+}
+
+/* Visibility and positioning logic for the wrapper when it becomes fixed */
+#scroll-search-button-wrapper.clicked {
+    /* When clicked and moved to fixed position. */
+    /* JS will set top/right. Transform should only handle rotation for #scroll. */
+    /* Individual buttons manage their own transform if needed. */
+}
+
+#scroll.rotate, 
+#scroll.clicked.rotate { 
+  transform: rotate(180deg); 
+}
+
+#scroll span {
+    position: relative;
+    display: inline-block; /* Allows animation */
+}
+
+.arrow-bounce {
+    animation: arrow 1s infinite;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Arrow bouncing animation (Old one commented out) */
+/*
+@keyframes bounceArrow {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-8px);
+    }
+    60% {
+        transform: translateY(-4px);
+    }
+}
+*/
+
+/* New Keyframes for arrow animation */
+@keyframes arrow {
+  0% { transform: translateY(3px); } /* Adjusted values from 'bottom' to 'transformY' */
+  50% { transform: translateY(-2px); }
+  100% { transform: translateY(3px); }
+}
+
+/* Ensure car grid section has enough top margin/padding if scroll-down arrow is too close */
+#car-grid-section {
+    padding-top: 4rem; /* Add some top padding to the car grid section */
+    /* margin-top: 4rem; /* Or use margin */
+}
+
+#car-grid-section h3 {
+    font-family: 'Poppins', sans-serif; /* Match hero-right-content h3 */
+    font-weight: 700; /* Match hero-right-content h3 */
+    font-size: clamp(1.4rem, 2.8vw, 1.7rem); /* Match hero-right-content h3 */
+    color: #1A1A1A; /* Dark color for the title */
+    text-align: center;
+    letter-spacing: 0.3px; /* Match hero-right-content h3 */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.15); /* Subtle text shadow */
+    margin-bottom: 1.5rem; /* Adjusted margin */
+    padding-bottom: 0.75rem; /* Space for the border */
+    border-bottom: 3px solid #FF5757; /* Accent color border */
+    display: inline-block; /* Border to fit text width */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+} 

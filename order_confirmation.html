@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Snapcar</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div id="main-page-wrapper">
+        <header>
+            <div class="container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="images/logo2.png" alt="Snapcar Logo">
+                    </a>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+                        <li><a href="reservation.html" id="global-reservation-link"><i class="fas fa-calendar-check"></i>My Reservations</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section id="confirmation-page-section" class="container">
+                <h2 class="section-title">Order Confirmed!</h2>
+                
+                <div id="order-details-container" style="display: none;">
+                    <p>Thank you for your order. Your reservation has been successfully processed.</p>
+                    <div class="order-summary-box">
+                        <h3>Reservation Summary</h3>
+                        <p><strong>Order ID:</strong> <span id="confirmed-order-id"></span></p>
+                        <p><strong>Order Date:</strong> <span id="confirmed-order-date"></span></p>
+                        
+                        <h4>Customer Details:</h4>
+                        <p><strong>Name:</strong> <span id="confirmed-customer-name"></span></p>
+                        <p><strong>Email:</strong> <span id="confirmed-customer-email"></span></p>
+                        <p><strong>Phone:</strong> <span id="confirmed-customer-phone"></span></p>
+                        
+                        <h4>Vehicle Details:</h4>
+                        <p><strong>Car:</strong> <span id="confirmed-car-model"></span> (<span id="confirmed-car-vin"></span>)</p>
+                        
+                        <h4>Rental Details:</h4>
+                        <p><strong>Start Date:</strong> <span id="confirmed-start-date"></span></p>
+                        <p><strong>Rental Period:</strong> <span id="confirmed-rental-period"></span> days</p>
+                        <p><strong>Total Price:</strong> $<span id="confirmed-total-price"></span></p>
+                    </div>
+                    <p class="text-center" style="margin-top: 20px;"><a href="index.html" class="btn btn-primary">Back to Homepage</a></p>
+                </div>
+
+                <div id="loading-message" style="display: none;">
+                    <p>Loading order details...</p>
+                </div>
+
+                <div id="confirmation-error-message" style="display: none; color: red;" class="text-center">
+                    <p>Could not retrieve order details. Please check your Order ID or contact support.</p>
+                    <p><a href="index.html" class="btn btn-secondary">Back to Homepage</a></p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Snapcar. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    <script src="js/carsData.js"></script> <!-- allOrdersData, fetchOrderDataOnce 사용 -->
+    <script src="js/confirmation.js"></script>
+</body>
+</html> 

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapcar - Your Fast Car Rental</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Mysuru:wght@300..700&family=Kalam:wght@300;400;700&family=Knewave&family=Oswald:wght@200..700&family=Playball&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="intro-screen">
+        <div class="intro-content">
+            <div class="intro-car-image-wrapper">
+                <img src="images/intro.svg" alt="Classic Rental Car">
+            </div>
+        </div>
+    </div>
+
+    <div id="main-page-wrapper">
+        <header>
+            <div class="container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="images/logo2.png" alt="Snapcar Logo">
+                    </a>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html" class="active"><i class="fas fa-home"></i>Home</a></li> 
+                        <li><a href="reservation.html" id="global-reservation-link"><i class="fas fa-calendar-check"></i>My Reservations</a></li> 
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <section id="hero" class="new-hero-design">
+            <div class="hero-background-left"></div>
+            <div class="hero-content-wrapper container">
+                <div class="hero-left-content">
+                    <h3>Snap the Keys, <br> Own the Road</h3>
+                    <p>Your ride is just one click away. No queues, no hassle — just you, the car, and the freedom to move.</p>
+                </div>
+                <div class="hero-car-image-container">
+                    <img src="images/hero_img.png" alt="Featured Rental Car">
+                </div>
+                <div class="hero-right-content">
+                    <h3>Search & Filter Cars</h3>
+                    <div class="search-controls">
+                        <input type="text" id="search-input" placeholder="Search cars...">
+                        <div id="suggestions-container"></div>
+                        <div class="filter-group">
+                            <select id="filter-type">
+                                <option value="">All Types</option>
+                            </select>
+                            <select id="filter-brand">
+                                <option value="">All Brands</option>
+                            </select>
+                            <div class="button-group">
+                                <button id="apply-filters" class="btn btn-primary">Apply Filters</button>
+                                <button id="reset-filters">Reset Filters</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <main>
+            <section id="car-grid-section" class="container">
+                <h3>VEHICLE SHOWROOM</h3>
+                <div class="car-grid">
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Snapcar. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/carsData.js"></script>
+    <script src="js/main.js"></script>
+
+    <div id="scroll-search-button-wrapper">
+        <div id="search-shortcut-button" class="scroll-button-style">
+            <i class="fas fa-search"></i>
+        </div>
+        <div id="scroll" class="scroll-button-style">
+            <span class="arrow-bounce">&#8595;</span>
+        </div>
+    </div>
+</body>
+</html> 

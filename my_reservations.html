@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* My Reservations Page Specific Styles */
         #my-reservations-section {
             padding-top: 2rem;
             padding-bottom: 3rem;
@@ -56,7 +55,7 @@
             display: inline-block;
             margin-top: 1rem;
             font-weight: bold;
-            color: #007bff;
+            color: #66821e;
             text-decoration: none;
         }
         .reservation-list-item .details-link:hover {
@@ -81,12 +80,11 @@
                         <img src="images/main_logo.png" alt="Snapcar Logo">
                     </a>
                 </div>
-                <!-- Optional: Search bar can be added here if needed on this page too -->
                 <nav>
                     <ul>
                         <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
-                        <li><a href="my_reservations.html" id="global-reservation-link" class="active"><i class="fas fa-list-alt"></i>My Reservations</a></li>
-                        <!-- 링크 텍스트 및 아이콘 변경 -->
+                        <li><a href="index.html#car-grid-section" id="nav-book-car"><i class="fas fa-car"></i>Book a Car</a></li>
+                        <li><a href="my_reservations.html" id="global-reservation-link" class="active"><i class="fas fa-list-alt"></i>My Bookings</a></li>
                     </ul>
                 </nav>
             </div>
@@ -97,7 +95,6 @@
                 <h2 class="section-title">My Reservations</h2>
                 
                 <div id="reservation-list-container">
-                    <!-- Reservation items will be populated by JavaScript -->
                 </div>
                 <div id="no-reservations-message" style="display: none;">
                     <p>You have no reservations yet.</p>

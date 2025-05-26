@@ -19,7 +19,8 @@
                 <nav>
                     <ul>
                         <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
-                        <li><a href="my_reservations.html" id="global-reservation-link"><i class="fas fa-list-alt"></i>My Reservations</a></li>
+                        <li><a href="index.html#car-grid-section" id="nav-book-car"><i class="fas fa-car"></i>Book a Car</a></li>
+                        <li><a href="my_reservations.html" id="global-reservation-link"><i class="fas fa-list-alt"></i>My Bookings</a></li>
                     </ul>
                 </nav>
             </div>
@@ -30,8 +31,8 @@
                 <h2 class="section-title">Order Confirmed!</h2>
                 
                 <div id="order-details-container" style="display: none;">
-                    <p class="text-center success-message"><i class="fas fa-check-circle"></i> Thank you for your order. Your reservation has been successfully processed.</p>
-                    <div class="order-summary-box">
+                    <p class="text-center success-message" style="color: #28a745; background-color: #e9f7ef; border: 1px solid #a6d9b8; padding: 15px; border-radius: 5px;"><i class="fas fa-check-circle" style="color: #28a745;"></i> Thank you for your order. Your reservation has been successfully processed.</p>
+                    <div class="order-summary-box" style="max-width: 600px; margin: 20px auto; width: 90%;">
                         <h3><i class="fas fa-receipt"></i> Reservation Summary</h3>
                         <div class="summary-item"><strong>Order ID:</strong> <span id="confirmed-order-id"></span></div>
                         <div class="summary-item"><strong>Order Date:</strong> <span id="confirmed-order-date"></span></div>
@@ -69,7 +70,7 @@
             </div>
         </footer>
     </div>
-    <script src="js/carsData.js"></script> <!-- allOrdersData, fetchOrderDataOnce 사용 -->
+    <script src="js/carsData.js"></script> 
     <script src="js/confirmation.js"></script>
 </body>
 </html> 

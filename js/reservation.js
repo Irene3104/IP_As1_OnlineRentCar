@@ -316,10 +316,7 @@ function setupFormEventListeners(car) {
     // Cancel button
     if (cancelButton) {
         cancelButton.addEventListener('click', () => {
-            if (confirm('Are you sure you want to cancel? All entered information will be lost.')) {
-                clearFormData();
-                window.location.href = 'index.html';
-            }
+            window.location.href = 'index.html';
         });
     }
 
@@ -436,67 +433,101 @@ function updatePriceCalculation(pricePerDay) {
  */
 async function submitReservation(car) {
     const submitButton = document.getElementById('submit-reservation');
-    const loadingIndicator = document.getElementById('loading-indicator');
     
     // Show loading state
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-    if (loadingIndicator) loadingIndicator.style.display = 'block';
+
+    let orderIdForRedirect = null; // Store orderId for redirection
 
     try {
+        // 1. Construct Order Data (same as before but ensure all fields are correctly populated)
         const formData = getFormData();
-        const orderData = {
+        const currentDate = new Date().toISOString();
+
+        // Ensure car details are complete, especially pricePerDay
+        const carDetailsForOrder = {
+            vin: car.vin,
+            brand: car.brand,
+            carModel: car.carModel, // Ensure this is 'carModel' as used in other places
+            pricePerDay: car.pricePerDay 
+        };
+
+        const newOrder = {
+            orderId: 'ord_' + Date.now() + Math.random().toString(36).substr(2, 5),
             customer: {
                 name: formData.customerName,
                 phoneNumber: formData.customerPhone,
                 email: formData.customerEmail,
-                driversLicenseNumber: formData.customerLicense
+                driversLicense: formData.customerLicense // Corrected field name based on typical use
             },
+            car: carDetailsForOrder,
             rental: {
                 startDate: formData.startDate,
-                rentalPeriod: parseInt(formData.rentalPeriod)
+                rentalPeriod: parseInt(formData.rentalPeriod),
+                orderDate: currentDate,
+                totalPrice: parseFloat(document.getElementById('total-price').textContent.replace(/[^\d.-]/g, ''))
             },
-            carVin: car.vin
+            status: 'pending' // Initial status, confirmation link will change it
         };
 
-        console.log('Submitting order data:', orderData);
+        console.log('Submitting new order:', newOrder);
 
-        const response = await fetch('php/submit_order.php', {
+        // 2. Save the Order via php/save_order.php
+        const saveOrderResponse = await fetch('php/save_order.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(orderData),
+            body: JSON.stringify(newOrder), // Send the complete newOrder object
         });
 
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        const saveResult = await saveOrderResponse.json();
+        console.log('Save order result:', saveResult);
+
+        if (!saveOrderResponse.ok || !saveResult.success) {
+            throw new Error(saveResult.message || 'Failed to save the order.');
         }
 
-        const result = await response.json();
-        console.log('Order submission result:', result);
+        orderIdForRedirect = newOrder.orderId; // Get orderId from the successfully saved order
+        console.log('Order saved. Order ID:', orderIdForRedirect);
 
-        if (result.success) {
-            showMessage('Reservation submitted successfully! Redirecting to confirmation page...', 'success');
-            clearFormData();
-            
-            // Redirect to confirmation page after a short delay
-            setTimeout(() => {
-                window.location.href = `order_confirmation.html?orderId=${result.orderId}`;
-            }, 2000);
-        } else {
-            throw new Error(result.message || 'Unknown error occurred');
+        // 3. Update Car Availability via php/update_car_status.php
+        console.log(`Updating car VIN: ${car.vin} to unavailable`);
+        const updateCarStatusResponse = await fetch('php/update_car_status.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ vin: car.vin, available: false }),
+        });
+
+        const updateCarResult = await updateCarStatusResponse.json();
+        console.log('Update car status result:', updateCarResult);
+
+        if (!updateCarStatusResponse.ok || !updateCarResult.success) {
+            console.warn('Order saved, but failed to update car status:', updateCarResult.message);
         }
+
+        // 4. If all successful (or if order save was successful and car update failure is tolerated for now):
+        showMessage('Order submitted successfully! Redirecting to confirmation page...', 'success');
+        clearFormData();
+        carsDataFetched = false; // Force re-fetch of car data on next page load (e.g., index)
+        ordersDataFetched = false; // Force re-fetch of order data
+        
+        setTimeout(() => {
+            window.location.href = `order_confirmation.html?orderId=${orderIdForRedirect}`;
+        }, 2500); // Slightly longer delay for message visibility
 
     } catch (error) {
-        console.error('Error submitting reservation:', error);
+        console.error('Error during reservation process:', error);
         showMessage(`Error submitting reservation: ${error.message}`, 'error');
         
         // Reset button state
         submitButton.disabled = false;
         submitButton.innerHTML = '<i class="fas fa-check"></i> Confirm Reservation';
     } finally {
-        if (loadingIndicator) loadingIndicator.style.display = 'none';
+        // if (loadingIndicator) loadingIndicator.style.display = 'none';
     }
 }
 
@@ -519,14 +550,10 @@ function getFormData() {
  * type can be 'success', 'error', or 'info' (default).
  */
 function showMessage(message, type = 'info') {
-    // Revert to using alert() for all message types as per user request
+    // Using alert() for all message types as per feedback
     console.log(`[showMessage] Type: ${type}, Message: ${message}`);
     
     if (type === 'success') {
-        // Specific success message override as per request
-        if (message.toLowerCase().includes('order submitted successfully')) {
-            message = '차량 예약이 성공적으로 완료되었습니다!';
-        }
         alert(`Success: ${message}`);
     } else if (type === 'error') {
         alert(`Error: ${message}`);
@@ -534,12 +561,6 @@ function showMessage(message, type = 'info') {
         alert(`Info: ${message}`);
     }
 
-    // Hide the custom message container if it was somehow still visible or used by other parts
-    const messageContainer = document.getElementById('reservation-message-container');
-    if (messageContainer) {
-        messageContainer.style.display = 'none';
-        messageContainer.innerHTML = '';
-    }
 }
 
 /**
@@ -627,5 +648,3 @@ function isValidPhoneNumber(phone) {
     const phoneRegex = /^[+]?[\d\s\-()]{10,}$/;
     return phoneRegex.test(phone);
 }
-
-// TODO: Add CSS for form elements, error messages, .selected-car-card in style.css 

@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.classList.remove('intro-active'); 
             }, 700); 
             initHomepage(); 
+            checkScrollToCarGrid();
         }, 3000); 
     } else {
         if(introScreen) introScreen.style.display = 'none'; 
@@ -38,8 +39,23 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('main-content-visible'); 
         document.body.classList.remove('intro-active'); 
         initHomepage(); 
+        checkScrollToCarGrid();
     }
 });
+
+function checkScrollToCarGrid() {
+    if (window.location.hash === '#car-grid-section') {
+        const carGridElement = document.getElementById('car-grid-section');
+        if (carGridElement) {
+            const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+            const scrollToPosition = carGridElement.offsetTop - headerHeight - 20;
+            window.scrollTo({
+                top: scrollToPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+}
 
 /**
  * Populates filter dropdowns (car type and brand) based on available car data.
@@ -289,9 +305,6 @@ function setupEventListeners() {
             applyFiltersAndSearch();
             const carGridSection = document.getElementById('car-grid-section');
             if (carGridSection) {
-                // Use the existing smoothScroll function if it's suitable, 
-                // or a simpler scrollIntoView if smoothScroll is jQuery-dependent and we want to avoid it here.
-                // For now, let's assume smoothScroll can take a DOM element or a selector.
                 smoothScroll($('#car-grid-section')); // Using jQuery selector as per smoothScroll function
             }
         });
@@ -310,17 +323,6 @@ function setupEventListeners() {
     }
 }
 
-// Ensure clearSuggestions is defined if used
-/*
-function clearSuggestions() {
-    const suggestionsContainer = document.getElementById('suggestions-container');
-    if (suggestionsContainer) {
-        suggestionsContainer.innerHTML = '';
-        const searchInput = document.getElementById('search-input');
-        if(searchInput) searchInput.classList.remove('suggestions-active');
-    }
-}
-*/
 
 // New Scroll Button Logic (jQuery based)
 function smoothScroll(target, time) {
@@ -475,10 +477,3 @@ function setupNewScrollButton() {
 
     $(window).on('scroll resize', checkFooterOverlapAndPageEnd);
 }
-
-// Ensure initHomepage is called correctly (e.g., after intro)
-// (The DOMContentLoaded listener structure should handle this by calling initHomepage)
-
-// ... (rest of the file, ensure applyFiltersAndSearch, displayCars, populateFilters, fetchCarDataOnce, allCarsData are correctly defined and used)
-
-// Note: Further functions for search, filtering, and other interactions will be added here. 

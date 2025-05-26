@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Order confirmation page loaded');
+    document.body.classList.add('main-content-visible');
+    
     const orderIdSpan = document.getElementById('confirmed-order-id');
     const orderDateSpan = document.getElementById('confirmed-order-date');
     const customerNameSpan = document.getElementById('confirmed-customer-name');
@@ -19,57 +22,115 @@ document.addEventListener('DOMContentLoaded', async () => {
         !carModelSpan || !carVinSpan || !startDateSpan || !rentalPeriodSpan || !totalPriceSpan || 
         !orderDetailsContainer || !loadingMessageDiv || !errorMessageDiv) {
         console.error('One or more key confirmation page elements are missing from the DOM.');
-        if(errorMessageDiv) errorMessageDiv.style.display = 'block'; // Show generic error if essential spans are missing
-        if(loadingMessageDiv) loadingMessageDiv.style.display = 'none';
+        if(errorMessageDiv) {
+            errorMessageDiv.style.display = 'block';
+        }
+        if(loadingMessageDiv) {
+            loadingMessageDiv.style.display = 'none';
+        }
         return;
     }
 
-    loadingMessageDiv.style.display = 'block'; // Show loading message
+    // Show loading message initially
+    console.log('[Confirmation Page] Initializing: Hiding details, Hiding error, Showing loading');
+    loadingMessageDiv.style.display = 'block';
     orderDetailsContainer.style.display = 'none';
     errorMessageDiv.style.display = 'none';
 
+    // Get order ID from URL
     const urlParams = new URLSearchParams(window.location.search);
     const orderIdFromUrl = urlParams.get('orderId');
+    console.log('[Confirmation Page] Order ID from URL:', orderIdFromUrl);
 
     if (!orderIdFromUrl) {
         console.warn('No orderId found in URL for confirmation page.');
-        orderDetailsContainer.style.display = 'none';
-        errorMessageDiv.style.display = 'block';
-        loadingMessageDiv.style.display = 'none';
+        showError();
         return;
     }
 
-    // Fetch order data (ensure carsData.js is loaded before this script)
-    await fetchOrderDataOnce(); 
+    console.log('Looking for order ID:', orderIdFromUrl);
 
-    if (!allOrdersData || !allOrdersData.orders || allOrdersData.orders.length === 0) {
-        console.error('No orders found in allOrdersData or data is not in expected format.');
-        orderDetailsContainer.style.display = 'none';
-        errorMessageDiv.style.display = 'block';
-        loadingMessageDiv.style.display = 'none';
-        return;
+    try {
+        // Fetch order data
+        await fetchOrderDataOnce();
+        console.log('[Confirmation Page] All loaded orders:', JSON.parse(JSON.stringify(allOrdersData)));
+
+        if (!allOrdersData || !allOrdersData.orders || allOrdersData.orders.length === 0) {
+            console.error('No orders found in allOrdersData or data is not in expected format.');
+            showError();
+            return;
+        }
+
+        console.log('Available orders:', allOrdersData.orders);
+
+        // Add this for debugging
+        if (allOrdersData && allOrdersData.orders && allOrdersData.orders.length > 0) {
+            console.log('[confirmation.js] Before forEach, first order.orderId:', allOrdersData.orders[0].orderId);
+        }
+        console.log('[Confirmation Page] Searching for orderId:', orderIdFromUrl);
+        allOrdersData.orders.forEach((order, index) => {
+            console.log(`[Confirmation Page] Keys of order at index ${index}:`, Object.keys(order));
+            console.log(`[Confirmation Page] order.hasOwnProperty('orderId') at index ${index}:`, order.hasOwnProperty('orderId'));
+            console.log(`[Confirmation Page] Processing order at index ${index}:`, JSON.stringify(order)); 
+            console.log(`[Confirmation Page] order.orderId at index ${index}:`, order.orderId, 'Type:', typeof order.orderId);
+        });
+        console.log('[Confirmation Page] orderIdFromUrl type:', typeof orderIdFromUrl);
+
+        // Find the specific order
+        const foundOrder = allOrdersData.orders.find(order => order.orderId === orderIdFromUrl);
+        console.log('[Confirmation Page] Found order:', foundOrder);
+
+        if (foundOrder) {
+            console.log('Order found:', foundOrder);
+            displayOrderDetails(foundOrder);
+        } else {
+            console.warn(`[Confirmation Page] Order with ID ${orderIdFromUrl} not found in loaded orders.`);
+            showError();
+        }
+
+    } catch (error) {
+        console.error('Error loading order data:', error);
+        showError();
     }
 
-    const foundOrder = allOrdersData.orders.find(order => order.orderId === orderIdFromUrl);
+    function displayOrderDetails(order) {
+        try {
+            console.log('[Confirmation Page] displayOrderDetails: Showing details, Hiding loading, Hiding error');
+            orderDetailsContainer.style.display = 'block';
+            loadingMessageDiv.style.display = 'none';
+            errorMessageDiv.style.display = 'none';
 
-    loadingMessageDiv.style.display = 'none'; // Hide loading message
+            // Populate order details
+            orderIdSpan.textContent = order.orderId || 'N/A';
+            orderDateSpan.textContent = order.rental.orderDate ? 
+                new Date(order.rental.orderDate).toLocaleString() : 'N/A';
+            customerNameSpan.textContent = order.customer.name || 'N/A';
+            customerEmailSpan.textContent = order.customer.email || 'N/A';
+            customerPhoneSpan.textContent = order.customer.phoneNumber || 'N/A';
+            carModelSpan.textContent = `${order.car.brand || ''} ${order.car.carModel || ''}`.trim() || 'N/A';
+            carVinSpan.textContent = order.car.vin || 'N/A';
+            
+            // Format start date properly
+            if (order.rental.startDate) {
+                const startDate = new Date(order.rental.startDate + 'T00:00:00');
+                startDateSpan.textContent = startDate.toLocaleDateString();
+            } else {
+                startDateSpan.textContent = 'N/A';
+            }
+            
+            rentalPeriodSpan.textContent = order.rental.rentalPeriod || 'N/A';
+            totalPriceSpan.textContent = order.rental.totalPrice !== undefined ? 
+                order.rental.totalPrice.toFixed(2) : 'N/A';
+            
+        } catch (error) {
+            console.error('Error displaying order details:', error);
+            showError();
+        }
+    }
 
-    if (foundOrder) {
-        orderIdSpan.textContent = foundOrder.orderId;
-        orderDateSpan.textContent = foundOrder.rental.orderDate ? new Date(foundOrder.rental.orderDate).toLocaleString() : 'N/A';
-        customerNameSpan.textContent = foundOrder.customer.name || 'N/A';
-        customerEmailSpan.textContent = foundOrder.customer.email || 'N/A';
-        customerPhoneSpan.textContent = foundOrder.customer.phoneNumber || 'N/A';
-        carModelSpan.textContent = `${foundOrder.car.brand || ''} ${foundOrder.car.carModel || ''}`.trim() || 'N/A';
-        carVinSpan.textContent = foundOrder.car.vin || 'N/A';
-        startDateSpan.textContent = foundOrder.rental.startDate ? new Date(foundOrder.rental.startDate + 'T00:00:00').toLocaleDateString() : 'N/A';
-        rentalPeriodSpan.textContent = foundOrder.rental.rentalPeriod || 'N/A';
-        totalPriceSpan.textContent = foundOrder.rental.totalPrice !== undefined ? foundOrder.rental.totalPrice.toFixed(2) : 'N/A';
-        
-        orderDetailsContainer.style.display = 'block';
-        errorMessageDiv.style.display = 'none';
-    } else {
-        console.warn(`Order with ID ${orderIdFromUrl} not found.`);
+    function showError() {
+        console.log('[Confirmation Page] showError: Hiding details, Hiding loading, Showing error');
+        loadingMessageDiv.style.display = 'none';
         orderDetailsContainer.style.display = 'none';
         errorMessageDiv.style.display = 'block';
     }

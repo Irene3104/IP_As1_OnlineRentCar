@@ -7,8 +7,8 @@ header('Content-Type: application/json');
 
 // Define file paths relative to this script
 $base_dir = __DIR__; // Gets the directory of the current script
-$cars_file_path = $base_dir . '../../data/cars.json';
-$orders_file_path = $base_dir . '../../data/orders.json';
+$cars_file_path = $base_dir . '/../data/cars.json';
+$orders_file_path = $base_dir . '/../data/orders.json';
 
 // Function to read JSON file
 function read_json_file($file_path) {
@@ -188,8 +188,11 @@ rewind($cars_fp);
 ftruncate($orders_fp, 0);
 rewind($orders_fp);
 
-$car_write_success = write_json_file_from_handle($cars_fp, $cars_data);
+error_log("[SubmitOrder] Attempting to write to orders.json. Data: " . json_encode($orders_data)); // 추가된 로그 1
 $order_write_success = write_json_file_from_handle($orders_fp, $orders_data);
+error_log("[SubmitOrder] orders.json write_json_file_from_handle result: " . ($order_write_success ? 'Success' : 'Failure')); // 추가된 로그 2
+
+$car_write_success = write_json_file_from_handle($cars_fp, $cars_data);
 
 // Release locks and close files
 flock($cars_fp, LOCK_UN);
@@ -210,15 +213,18 @@ if ($order_write_success && $car_write_success) {
 
 // Helper function to write JSON using file handle (for use with flock)
 function write_json_file_from_handle($fp, $data) {
+    error_log("[SubmitOrder] Inside write_json_file_from_handle. Preparing to encode data."); // 추가된 로그 3
     $json_data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     if ($json_data === false) {
-        error_log("JSON encode error during handle write: " . json_last_error_msg());
+        error_log("[SubmitOrder] JSON encode error during handle write: " . json_last_error_msg());
         return false;
     }
+    error_log("[SubmitOrder] Data encoded. Attempting fwrite."); // 추가된 로그 4
     if (fwrite($fp, $json_data) === false) {
-        error_log("Failed to write to file handle.");
+        error_log("[SubmitOrder] Failed to write to file handle.");
         return false;
     }
+    error_log("[SubmitOrder] fwrite successful."); // 추가된 로그 5
     return true;
 }
 

@@ -43,8 +43,11 @@ async function fetchOrderDataOnce() {
         return allOrdersData; // Return the already fetched data
     }
     try {
+        console.log('[carsData.js] fetchOrderDataOnce called');
         // console.log('Fetching order data...');
-        const response = await fetch('data/orders.json');
+        const response = await fetch('data/orders.json', { cache: 'no-store' });
+        console.log('[carsData.js] fetch response status:', response.status);
+
         if (!response.ok) {
             // orders.json 파일이 처음에는 비어있을 수 있으므로, 404는 치명적 오류로 간주하지 않음
             if (response.status === 404) {
@@ -55,12 +58,19 @@ async function fetchOrderDataOnce() {
             }
         } else {
             const text = await response.text();
+            console.log('[carsData.js] fetched text (trimmed length):', text.trim().length);
             if (text.trim() === '') {
                 // 파일이 비어있는 경우 (예: 첫 주문 전)
                 console.warn('orders.json is empty, initializing with empty orders list.');
                 allOrdersData = { orders: [] }; // 기본 구조로 초기화
             } else {
-                allOrdersData = JSON.parse(text); 
+                console.log('[carsData.js] Attempting JSON.parse');
+                allOrdersData = JSON.parse(text); // 이 시점에서는 { orders: [{orderId: ...}, ...] } 형태일 것입니다.
+                if (allOrdersData && allOrdersData.orders && allOrdersData.orders.length > 0) {
+                    console.log('[carsData.js] After parse, first order.orderId:', allOrdersData.orders[0].orderId);
+                } else {
+                    console.log('[carsData.js] After parse, allOrdersData.orders is not as expected or is empty. allOrdersData:', JSON.stringify(allOrdersData));
+                }
             }
         }
         ordersDataFetched = true;

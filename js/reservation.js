@@ -1,20 +1,17 @@
 // js/reservation.js
-// Handles logic for the reservation.html page.
+// Handles logic for the reservation.html page with improved UI and functionality
 
 document.addEventListener('DOMContentLoaded', async () => {
-    alert("최신 reservation.js 로드됨 - DOMContentLoaded 시작"); // 테스트용 alert
+    console.log('Reservation page DOM fully loaded and parsed.');
     clearFormData(); // Clear any previously saved form data on page load
-    console.log('Reservation page DOM fully loaded and parsed. Form data has been cleared.');
 
-    // Ensure car data is fetched (it might have been fetched by index.html if user navigated from there,
-    // but if reservation.html is opened directly, we need to ensure it's loaded).
+    // Ensure car data is fetched
     if (!allCarsData || allCarsData.length === 0) {
         console.log('Car data not found, fetching now for reservation page...');
-        await fetchCarDataOnce(); // fetchCarDataOnce is defined in carsData.js
+        await fetchCarDataOnce();
     }
 
     // Make the main content wrapper visible
-    // This class is used by CSS to set opacity and transform for a fade-in/slide-in effect.
     document.body.classList.add('main-content-visible');
 
     const selectedCarInfoContainer = document.getElementById('selected-car-info-container');
@@ -35,31 +32,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (car) {
             console.log('Car found:', car);
-            displaySelectedCarInfo(car, selectedCarInfoContainer);
+            displaySelectedCarInfo(car);
             if (car.available) {
-                console.log('Car is available. Displaying reservation form.');
-                displayReservationForm(car, reservationFormContainer);
+                console.log('Car is available. Setting up reservation form.');
+                setupReservationForm(car);
                 loadFormData(); // Load any saved form data
-                reservationMessageContainer.style.display = 'none';
+                hideMessage();
             } else {
                 console.log('Car is not available.');
-                showReservationMessage('This car is currently rented out. Please choose another vehicle.', reservationMessageContainer);
-                reservationFormContainer.innerHTML = ''; // Clear form area
+                showMessage('This car is currently rented out. Please choose another vehicle.', 'error');
+                hideForm();
             }
         } else {
             console.log('Car with VIN not found.');
-            showReservationMessage('Invalid car selection. Please go back and select a car.', reservationMessageContainer);
+            showMessage('Invalid car selection. Please go back and select a car.', 'error');
+            hideForm();
         }
     } else {
         console.log('No Car VIN in URL.');
-        showReservationMessage('Please select a car from our fleet to make a reservation.', reservationMessageContainer);
+        showMessage('Please select a car from our fleet to make a reservation.', 'error');
+        hideForm();
     }
 });
 
 /**
  * Finds a car by its VIN from the global allCarsData array.
- * @param {string} vin - The VIN of the car to find.
- * @returns {object|null} The car object if found, otherwise null.
  */
 function findCarByVin(vin) {
     if (!allCarsData || allCarsData.length === 0) {
@@ -70,354 +67,336 @@ function findCarByVin(vin) {
 }
 
 /**
- * Displays the selected car's information.
- * @param {object} car - The car object.
- * @param {HTMLElement} container - The HTML element to display car info in.
+ * Displays the selected car's information in the new card format.
  */
-function displaySelectedCarInfo(car, container) {
+function displaySelectedCarInfo(car) {
+    const container = document.getElementById('selected-car-card');
+    if (!container) return;
+
     container.innerHTML = `
-        <div class="selected-car-card">
-            <h3>Your Selected Ride:</h3>
-            <img src="${car.image || 'images/default-car.png'}" alt="${car.brand} ${car.carModel}" class="selected-car-image" onerror="this.onerror=null;this.src='images/default-car.png';">
-            <div class="selected-car-details">
-                <h4 class="selected-car-title">${car.brand} ${car.carModel} (${car.yearOfManufacture})</h4>
-                <p class="selected-car-price">Price: $${car.pricePerDay}<span class="per-day">/day</span></p>
-                <p class="selected-car-type">Type: ${car.carType}</p>
-                <!-- VIN is intentionally not displayed to the user -->
-            </div>
+        <img src="${car.image || 'images/default-car.png'}" 
+             alt="${car.brand} ${car.carModel}" 
+             class="selected-car-image" 
+             onerror="this.onerror=null;this.src='images/default-car.png';">
+        <div class="selected-car-details">
+            <h4>${car.brand} ${car.carModel} (${car.yearOfManufacture})</h4>
+            <p><strong>Type:</strong> ${car.carType}</p>
+            <p><strong>Fuel:</strong> ${car.fuelType}</p>
+            <p><strong>Mileage:</strong> ${car.mileage}</p>
+            <p class="selected-car-price">$${car.pricePerDay}/day</p>
         </div>
     `;
-    // TODO: Add CSS for .selected-car-card and its children for better presentation
 }
 
 /**
- * Displays the reservation form.
- * @param {object} car - The car object (to get price per day).
- * @param {HTMLElement} container - The HTML element to display the form in.
+ * Sets up the reservation form with event listeners and validation.
  */
-function displayReservationForm(car, container) {
-    container.innerHTML = `
-        <form id="reservation-form">
-            <h4>Enter Your Details:</h4>
-            
-            <div class="form-group">
-                <label for="name">Full Name:</label>
-                <input type="text" id="name" name="name" required>
-                <small class="error-message"></small>
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">Phone Number:</label>
-                <input type="tel" id="phone" name="phone" required>
-                <small class="error-message"></small>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email Address:</label>
-                <input type="email" id="email" name="email" required>
-                <small class="error-message"></small>
-            </div>
-
-            <div class="form-group">
-                <label for="license">License No.:</label>
-                <input type="text" id="license" name="license" required>
-                <small class="error-message"></small>
-            </div>
-
-            <div class="form-group">
-                <label for="start-date">Start Date:</label>
-                <input type="date" id="start-date" name="startDate" required>
-                <small class="error-message"></small>
-            </div>
-
-            <div class="form-group">
-                <label for="rental-period">Rental Period (days):</label>
-                <input type="number" id="rental-period" name="rentalPeriod" min="1" value="1" required>
-                <small class="error-message"></small>
-            </div>
-
-            <div class="total-price-container">
-                <strong>Total Price: $<span id="total-price">0.00</span></strong>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" id="submit-order-button" class="btn btn-primary" disabled>Submit Order</button>
-                <button type="button" id="cancel-button" class="btn btn-secondary">Cancel</button>
-            </div>
-        </form>
-    `;
-
-    // Add event listeners for form validation, total price calculation, save/load data, and submission
-    setupFormEventListeners(car.pricePerDay, car.vin);
-}
-
-/**
- * Shows a message in the reservation message container.
- * @param {string} message - The message to display.
- * @param {HTMLElement} container - The HTML element to display the message in.
- */
-function showReservationMessage(message, container) {
-    // Fallback if container argument is somehow lost, though it shouldn't be.
-    const targetContainer = container || document.getElementById('reservation-message-container');
-    if (targetContainer) {
-        targetContainer.innerHTML = `<p>${message}</p>`;
-        targetContainer.style.display = 'block';
-    } else {
-        console.error('CRITICAL: reservationMessageContainer not found in showReservationMessage. Message:', message);
-        // As a last resort, use alert, though this is bad UX.
-        alert(message);
-    }
-}
-
-/**
- * Sets up event listeners for the reservation form.
- * Includes input validation, total price calculation, and form data persistence.
- * @param {number} pricePerDay - The price per day of the selected car.
- * @param {string} carVin - The VIN of the selected car.
- */
-function setupFormEventListeners(pricePerDay, carVin) {
+function setupReservationForm(car) {
     const form = document.getElementById('reservation-form');
-    const submitButton = document.getElementById('submit-order-button');
-    const rentalPeriodInput = document.getElementById('rental-period');
+    if (!form) return;
+
+    // Set minimum date to today
     const startDateInput = document.getElementById('start-date');
-    const totalPriceDisplay = document.getElementById('total-price');
-    const inputs = form.querySelectorAll('input[required]'); // All required input fields
-    const nameInput = document.getElementById('name');
-    const phoneInput = document.getElementById('phone');
-    const emailInput = document.getElementById('email');
-    const licenseInput = document.getElementById('license');
-    const cancelButton = document.getElementById('cancel-button');
+    if (startDateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.min = today;
+        startDateInput.value = today; // Set default to today
+    }
 
-    // Function to calculate and display total price
-    const calculateTotalPrice = () => {
-        const period = parseInt(rentalPeriodInput.value) || 0;
-        const startDate = startDateInput.value;
-        let finalPrice = 0;
-        if (period >= 1 && startDate) { // Ensure period is valid and start date is selected
-            finalPrice = period * pricePerDay;
-        }
-        totalPriceDisplay.textContent = finalPrice.toFixed(2);
-    };
+    // Set default rental period
+    const rentalPeriodInput = document.getElementById('rental-period');
+    if (rentalPeriodInput) {
+        rentalPeriodInput.value = '1';
+    }
 
-    // Function to validate a single input field
-    const validateInput = (input) => {
-        console.log('[Debug] Validating input:', input.id, 'Value:', input.value, 'Required:', input.required);
+    // Initial price calculation
+    updatePriceCalculation(car.pricePerDay);
 
-        const errorMessageElement = input.nextElementSibling;
-        let isValid = true;
-        const labelText = input.previousElementSibling.textContent.replace(':','');
+    // Add event listeners
+    setupFormEventListeners(car);
+}
 
-        if (!input.value.trim()) {
-            isValid = false;
-            input.classList.add('is-invalid');
-            if(errorMessageElement) errorMessageElement.textContent = `${labelText} is required.`;
-        } else {
-            // Specific validations
-            if (input.id === 'email' && !isValidEmail(input.value)) {
-                isValid = false;
-                input.classList.add('is-invalid');
-                if(errorMessageElement) errorMessageElement.textContent = 'Please enter a valid email address.';
-            } else if (input.id === 'phone' && !isValidPhoneNumber(input.value)) { // Basic phone validation
-                isValid = false;
-                input.classList.add('is-invalid');
-                if(errorMessageElement) errorMessageElement.textContent = 'Please enter a valid phone number (e.g., 10 digits, or with + and spaces/dashes).';
-            } else if (input.id === 'start-date') {
-                const today = new Date();
-                const selectedDate = new Date(input.value);
-                today.setHours(0, 0, 0, 0); // Compare dates only, not time
-                selectedDate.setHours(0, 0, 0, 0); // Ensure time part doesn't affect comparison for past dates
+/**
+ * Sets up all form event listeners for validation and interaction.
+ */
+function setupFormEventListeners(car) {
+    const form = document.getElementById('reservation-form');
+    const submitButton = document.getElementById('submit-reservation');
+    const cancelButton = document.getElementById('cancel-reservation');
+    const inputs = form.querySelectorAll('input[required]');
 
-                if (selectedDate < today) {
-                    isValid = false;
-                    input.classList.add('is-invalid');
-                    if(errorMessageElement) errorMessageElement.textContent = 'Start date cannot be in the past.';
-                } else {
-                    input.classList.remove('is-invalid');
-                    if(errorMessageElement) errorMessageElement.textContent = '';
-                }
-            } else if (input.id === 'rental-period' && (parseInt(input.value) < 1 || isNaN(parseInt(input.value)))) {
-                isValid = false;
-                input.classList.add('is-invalid');
-                if(errorMessageElement) errorMessageElement.textContent = 'Rental period must be at least 1 day.';
-            } else {
-                input.classList.remove('is-invalid');
-                if(errorMessageElement) errorMessageElement.textContent = '';
-            }
-        }
-        console.log('[Debug] Input:', input.id, 'Is Valid:', isValid, 'Error Msg:', errorMessageElement ? errorMessageElement.textContent : 'N/A');
-        return isValid;
-    };
-
-    // Function to validate all inputs and enable/disable submit button
-    const validateForm = () => {
-        let allValid = true;
-        inputs.forEach(input => {
-            if (!validateInput(input)) {
-                allValid = false;
-            }
-        });
-        console.log('[Debug] Final form validation result (allValid for submit button):', allValid);
-        submitButton.disabled = !allValid;
-        return allValid;
-    };
-
-    // Event listeners for real-time validation and total price calculation
+    // Real-time validation and price calculation
     inputs.forEach(input => {
         input.addEventListener('input', () => {
-            validateInput(input); // Validate the current input field
-            validateForm();       // Check all fields to enable/disable submit button
+            validateInput(input);
+            validateForm();
             if (input.id === 'rental-period' || input.id === 'start-date') {
-                calculateTotalPrice();
+                updatePriceCalculation(car.pricePerDay);
             }
-            saveFormData(); // Save form data on every input
+            saveFormData();
+        });
+
+        input.addEventListener('blur', () => {
+            validateInput(input);
+            validateForm();
         });
     });
-    
-    // Initial calculation and validation
-    calculateTotalPrice();
-    validateForm();
 
-    // Form submission handler
+    // Form submission
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        if (!validateForm()) { // Final validation check just in case
-            console.log('Form is invalid. Submission prevented. (From submit event listener)');
+        if (!validateForm()) {
+            console.log('Form validation failed on submit');
             return;
         }
-        console.log('Form submitted');
-        submitButton.disabled = true;
-        submitButton.textContent = 'Submitting...';
-
-        const formData = new FormData(form);
-        // const orderData = Object.fromEntries(formData.entries()); // 이전 방식
-
-        // PHP가 기대하는 구조로 orderData 객체 생성
-        const orderData = {
-            customer: {
-                name: formData.get('name'),
-                phoneNumber: formData.get('phone'),
-                email: formData.get('email'),
-                driversLicenseNumber: formData.get('license')
-            },
-            rental: {
-                startDate: formData.get('startDate'),
-                rentalPeriod: formData.get('rentalPeriod') // PHP에서 숫자로 변환할 것임
-            },
-            carVin: carVin, // carVin은 setupFormEventListeners에서 전달받은 파라미터
-            // totalPrice는 PHP에서 다시 계산하므로, 여기서 보내는 것은 선택 사항입니다.
-            // 만약 보내려면, PHP가 이 값을 어떻게 사용할지 확인해야 합니다.
-            // totalPrice: parseFloat(document.getElementById('total-price').textContent)
-        };
-        
-        // if (!carVin) { // carVin은 이제 orderData.carVin으로 이미 할당됨
-        //     console.error('Critical: Car VIN not available for submission. Passed carVin was:', carVin);
-        //     showReservationMessage('Error: Car information is missing. Cannot submit order. Please refresh and try again.', document.getElementById('reservation-message-container'));
-        //     submitButton.disabled = false;
-        //     submitButton.textContent = 'Submit Order';
-        //     return;
-        // }
-        // orderData.vin = carVin; // 이전 방식: 이제 orderData.carVin 사용
-
-        // orderData.totalPrice = parseFloat(document.getElementById('total-price').textContent); // 이전 방식
-
-        console.log("[Debug] Data being sent to PHP:", JSON.stringify(orderData, null, 2));
-
-        try {
-            // Ensure the fetch URL is relative to the Rentcar/php/ directory for XAMPP
-            const response = await fetch('php/submit_order.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(orderData),
-            });
-
-            // Check if the response is okay (status in the range 200-299)
-            if (!response.ok) {
-                // Try to get more error info from response if possible
-                let errorText = `Server responded with ${response.status}: ${response.statusText}`;
-                try {
-                    const errorData = await response.json(); // Attempt to parse as JSON
-                    errorText += ` - ${errorData.message || 'No additional message from server.'}`;
-                } catch (e) {
-                    // If not JSON, maybe HTML error page, try to get text
-                    try {
-                        const textError = await response.text();
-                        console.error("Server error response (text):");
-                        // Avoid displaying full HTML page in simple alert/message. Log for dev.
-                        // For user display, a generic message is better if text is too long/complex.
-                        // errorText += ` (Details: ${textError.substring(0,100)}...)`; 
-                    } catch (textE) { /* ignore text parsing error */ }
-                }
-                throw new Error(errorText);
-            }
-
-            const result = await response.json();
-            console.log('Order submission result:', result);
-
-            if (result.success) {
-                showReservationMessage(`Order successfully submitted! Your order ID is ${result.orderId}.`, document.getElementById('reservation-message-container'));
-                clearFormData(); // Clear form and localStorage
-                form.reset();
-                // submitButton.style.display = 'none'; // 리디렉션할 것이므로 버튼 숨김은 선택 사항
-                
-                // 주문 확인 페이지로 리디렉션
-                window.location.href = `order_confirmation.html?orderId=${result.orderId}`;
-
-                // Update car availability locally if needed (or rely on next page load)
-                const carToUpdate = findCarByVin(orderData.carVin);
-                if (carToUpdate) {
-                    carToUpdate.available = false;
-                    // Potentially update allCarsData and re-save to localStorage if carsData.js handles that
-                }
-            } else {
-                showReservationMessage(`Error submitting order: ${result.message || 'Unknown error.'}`, document.getElementById('reservation-message-container'));
-                submitButton.disabled = false;
-                submitButton.textContent = 'Submit Order';
-            }
-        } catch (error) {
-            console.error('Error submitting order:', error);
-            showReservationMessage(`Error submitting order: ${error.message}. Please check console or try again later. Ensure XAMPP or a PHP server is running.`, document.getElementById('reservation-message-container'));
-            submitButton.disabled = false;
-            submitButton.textContent = 'Submit Order';
-        }
+        await submitReservation(car);
     });
 
+    // Cancel button
     if (cancelButton) {
         cancelButton.addEventListener('click', () => {
-            form.reset();
-            clearFormData(); // Clear localStorage
-            calculateTotalPrice(); // Reset total price display
-            inputs.forEach(input => {
-                input.classList.remove('is-invalid');
-                const errorMessageElement = input.nextElementSibling;
-                if(errorMessageElement) errorMessageElement.textContent = '';
-            });
-            validateForm(); // Re-validate to set initial state of button
-            window.location.href = 'index.html'; // Redirect to homepage
+            if (confirm('Are you sure you want to cancel? All entered information will be lost.')) {
+                clearFormData();
+                window.location.href = 'index.html';
+            }
         });
     }
 
-    // Load saved data on page load (after form is displayed)
-    loadFormData(); 
-    calculateTotalPrice(); // Calculate price based on loaded data if any
-    validateForm(); // Validate based on loaded data
+    // Initial validation
+    validateForm();
+}
+
+/**
+ * Validates a single input field.
+ */
+function validateInput(input) {
+    const errorElement = document.getElementById(input.id.replace(/^(customer-|start-|rental-)/, '') + '-error');
+    let isValid = true;
+    let errorMessage = '';
+
+    // Clear previous error state
+    input.classList.remove('error');
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.classList.remove('show');
+    }
+
+    const value = input.value.trim();
+
+    if (!value && input.required) {
+        isValid = false;
+        errorMessage = 'This field is required.';
+    } else if (value) {
+        switch (input.type) {
+            case 'email':
+                if (!isValidEmail(value)) {
+                    isValid = false;
+                    errorMessage = 'Please enter a valid email address.';
+                }
+                break;
+            case 'tel':
+                if (!isValidPhoneNumber(value)) {
+                    isValid = false;
+                    errorMessage = 'Please enter a valid phone number.';
+                }
+                break;
+            case 'date':
+                const today = new Date();
+                const selectedDate = new Date(value);
+                today.setHours(0, 0, 0, 0);
+                selectedDate.setHours(0, 0, 0, 0);
+                if (selectedDate < today) {
+                    isValid = false;
+                    errorMessage = 'Start date cannot be in the past.';
+                }
+                break;
+            case 'number':
+                const numValue = parseInt(value);
+                if (isNaN(numValue) || numValue < 1 || numValue > 30) {
+                    isValid = false;
+                    errorMessage = 'Rental period must be between 1 and 30 days.';
+                }
+                break;
+        }
+    }
+
+    if (!isValid) {
+        input.classList.add('error');
+        if (errorElement) {
+            errorElement.textContent = errorMessage;
+            errorElement.classList.add('show');
+        }
+    }
+
+    return isValid;
+}
+
+/**
+ * Validates the entire form and enables/disables submit button.
+ */
+function validateForm() {
+    const form = document.getElementById('reservation-form');
+    const submitButton = document.getElementById('submit-reservation');
+    const inputs = form.querySelectorAll('input[required]');
+    
+    let allValid = true;
+    inputs.forEach(input => {
+        if (!validateInput(input)) {
+            allValid = false;
+        }
+    });
+
+    if (submitButton) {
+        submitButton.disabled = !allValid;
+    }
+
+    return allValid;
+}
+
+/**
+ * Updates the price calculation display.
+ */
+function updatePriceCalculation(pricePerDay) {
+    const rentalPeriodInput = document.getElementById('rental-period');
+    const dailyRateElement = document.getElementById('daily-rate');
+    const displayRentalPeriodElement = document.getElementById('display-rental-period');
+    const totalPriceElement = document.getElementById('total-price');
+
+    const period = parseInt(rentalPeriodInput?.value) || 0;
+    const totalPrice = period * pricePerDay;
+
+    if (dailyRateElement) dailyRateElement.textContent = `$${pricePerDay}`;
+    if (displayRentalPeriodElement) displayRentalPeriodElement.textContent = `${period} day${period !== 1 ? 's' : ''}`;
+    if (totalPriceElement) totalPriceElement.textContent = `$${totalPrice}`;
+}
+
+/**
+ * Submits the reservation to the server.
+ */
+async function submitReservation(car) {
+    const submitButton = document.getElementById('submit-reservation');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    
+    // Show loading state
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    if (loadingIndicator) loadingIndicator.style.display = 'block';
+
+    try {
+        const formData = getFormData();
+        const orderData = {
+            customer: {
+                name: formData.customerName,
+                phoneNumber: formData.customerPhone,
+                email: formData.customerEmail,
+                driversLicenseNumber: formData.customerLicense
+            },
+            rental: {
+                startDate: formData.startDate,
+                rentalPeriod: parseInt(formData.rentalPeriod)
+            },
+            carVin: car.vin
+        };
+
+        console.log('Submitting order data:', orderData);
+
+        const response = await fetch('php/submit_order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('Order submission result:', result);
+
+        if (result.success) {
+            showMessage('Reservation submitted successfully! Redirecting to confirmation page...', 'success');
+            clearFormData();
+            
+            // Redirect to confirmation page after a short delay
+            setTimeout(() => {
+                window.location.href = `order_confirmation.html?orderId=${result.orderId}`;
+            }, 2000);
+        } else {
+            throw new Error(result.message || 'Unknown error occurred');
+        }
+
+    } catch (error) {
+        console.error('Error submitting reservation:', error);
+        showMessage(`Error submitting reservation: ${error.message}`, 'error');
+        
+        // Reset button state
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="fas fa-check"></i> Confirm Reservation';
+    } finally {
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
+    }
+}
+
+/**
+ * Gets form data as an object.
+ */
+function getFormData() {
+    return {
+        customerName: document.getElementById('customer-name')?.value || '',
+        customerPhone: document.getElementById('customer-phone')?.value || '',
+        customerEmail: document.getElementById('customer-email')?.value || '',
+        customerLicense: document.getElementById('customer-license')?.value || '',
+        startDate: document.getElementById('start-date')?.value || '',
+        rentalPeriod: document.getElementById('rental-period')?.value || '1'
+    };
+}
+
+/**
+ * Shows a message to the user.
+ */
+function showMessage(message, type = 'info') {
+    const container = document.getElementById('reservation-message-container');
+    if (!container) return;
+
+    container.className = `message-container ${type}`;
+    container.innerHTML = `<p>${message}</p>`;
+    container.style.display = 'block';
+
+    // Auto-hide success messages after 5 seconds
+    if (type === 'success') {
+        setTimeout(() => {
+            hideMessage();
+        }, 5000);
+    }
+}
+
+/**
+ * Hides the message container.
+ */
+function hideMessage() {
+    const container = document.getElementById('reservation-message-container');
+    if (container) {
+        container.style.display = 'none';
+    }
+}
+
+/**
+ * Hides the reservation form.
+ */
+function hideForm() {
+    const container = document.getElementById('reservation-form-container');
+    if (container) {
+        container.style.display = 'none';
+    }
 }
 
 /**
  * Saves form data to localStorage.
  */
 function saveFormData() {
-    const form = document.getElementById('reservation-form');
-    if (!form) return;
-    const formData = {
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        email: document.getElementById('email').value,
-        license: document.getElementById('license').value,
-        startDate: document.getElementById('start-date').value,
-        rentalPeriod: document.getElementById('rental-period').value
-    };
+    const formData = getFormData();
     localStorage.setItem('reservationFormData', JSON.stringify(formData));
 }
 
@@ -426,14 +405,30 @@ function saveFormData() {
  */
 function loadFormData() {
     const savedData = localStorage.getItem('reservationFormData');
-    if (savedData) {
+    if (!savedData) return;
+
+    try {
         const formData = JSON.parse(savedData);
-        if(document.getElementById('name')) document.getElementById('name').value = formData.name || '';
-        if(document.getElementById('phone')) document.getElementById('phone').value = formData.phone || '';
-        if(document.getElementById('email')) document.getElementById('email').value = formData.email || '';
-        if(document.getElementById('license')) document.getElementById('license').value = formData.license || '';
-        if(document.getElementById('start-date')) document.getElementById('start-date').value = formData.startDate || '';
-        if(document.getElementById('rental-period')) document.getElementById('rental-period').value = formData.rentalPeriod || '1';
+        
+        // Populate form fields
+        Object.keys(formData).forEach(key => {
+            const input = document.getElementById(key.replace(/([A-Z])/g, '-$1').toLowerCase());
+            if (input && formData[key]) {
+                input.value = formData[key];
+            }
+        });
+
+        // Trigger validation and price calculation
+        const form = document.getElementById('reservation-form');
+        if (form) {
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.dispatchEvent(new Event('input'));
+            });
+        }
+    } catch (error) {
+        console.error('Error loading saved form data:', error);
+        clearFormData();
     }
 }
 
@@ -445,19 +440,18 @@ function clearFormData() {
 }
 
 /**
- * Basic email validation.
- * @param {string} email
- * @returns {boolean}
+ * Validates email format.
  */
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-// Helper function for basic phone number validation (example)
+/**
+ * Validates phone number format.
+ */
 function isValidPhoneNumber(phone) {
-    // Allows digits, spaces, dashes, parentheses, and optional leading +
-    // This is a very basic example. For robust validation, consider a library.
+    // Allow digits, spaces, dashes, parentheses, and optional leading +
     const phoneRegex = /^[+]?[\d\s\-()]{10,}$/;
     return phoneRegex.test(phone);
 }

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reservations - Snapcar</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* My Reservations Page Specific Styles */
+        #my-reservations-section {
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+        }
+        #my-reservations-section .section-title {
+            margin-bottom: 2.5rem;
+            color: #333;
+        }
+        .reservation-list-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: box-shadow 0.3s ease;
+        }
+        .reservation-list-item:hover {
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+        .reservation-list-item h3 {
+            font-size: 1.4rem;
+            color: #FF5757; /* Accent color */
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reservation-list-item h3 .order-date {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: normal;
+        }
+        .reservation-list-item p {
+            margin-bottom: 0.6rem;
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .reservation-list-item p strong {
+            color: #333;
+            min-width: 120px;
+            display: inline-block;
+        }
+        .reservation-list-item .details-link {
+            display: inline-block;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .reservation-list-item .details-link:hover {
+            text-decoration: underline;
+        }
+        #no-reservations-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #6c757d;
+            padding: 3rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-page-wrapper">
+        <header>
+            <div class="container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="images/main_logo.png" alt="Snapcar Logo">
+                    </a>
+                </div>
+                <!-- Optional: Search bar can be added here if needed on this page too -->
+                <nav>
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+                        <li><a href="my_reservations.html" id="global-reservation-link" class="active"><i class="fas fa-list-alt"></i>My Reservations</a></li>
+                        <!-- 링크 텍스트 및 아이콘 변경 -->
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section id="my-reservations-section" class="container">
+                <h2 class="section-title">My Reservations</h2>
+                
+                <div id="reservation-list-container">
+                    <!-- Reservation items will be populated by JavaScript -->
+                </div>
+                <div id="no-reservations-message" style="display: none;">
+                    <p>You have no reservations yet.</p>
+                    <p><a href="index.html" class="btn btn-primary" style="margin-top:1rem;">Find a Car to Rent</a></p>
+                </div>
+
+            </section>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Snapcar. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/carsData.js"></script> 
+    <script src="js/my_reservations.js"></script>
+</body>
+</html> 

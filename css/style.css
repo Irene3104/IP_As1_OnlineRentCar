@@ -154,6 +154,12 @@ header nav ul li a.active {
     text-decoration: none;
 }
 
+/* Ensure icons in active/hovered links match the text color */
+header nav ul li a:hover i,
+header nav ul li a.active i {
+    color: #8B0000; /* Match active link text color */
+}
+
 /* Header 내부 요소 정렬 */
 header .container {
     display: flex;
@@ -1013,17 +1019,96 @@ body.main-content-visible #main-page-wrapper {
 
 /* Message Container on Reservation Page */
 #reservation-message-container p {
-    font-size: 1.1rem;
-    padding: 2rem;
-    background-color: #F8F9FA; /* Light background for messages */
-    border-radius: 8px;
-    border: 1px dashed #CED4DA;
-    color: #495057;
+    font-size: 1.05rem; /* Slightly adjusted font size */
+    padding: 1.8rem 2rem; /* Adjusted padding */
+    background-color: #FFFFFF; /* Clean white background */
+    border-radius: 10px; /* Slightly more rounded */
+    border: 1px solid #E0E6ED; /* Softer, solid border */
+    color: #343A40; /* Good contrast text color */
     max-width: 700px;
-    margin: 2rem auto;
+    margin: 2.5rem auto; /* Adjusted margin for better spacing */
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06); /* Softer shadow */
+    line-height: 1.65;
 }
 
-/* Responsive adjustments for selected car card */
+/* === Message Container (Enhanced for Order Confirmation UX) === */
+.message-container {
+    margin-top: 2.5rem; /* Increased top margin */
+    padding: 2rem 2.5rem; /* Generous padding */
+    border-radius: 12px; /* Modern rounded corners */
+    font-weight: 500; /* Medium font weight */
+    text-align: left; /* Align text to the left for content flow with icon */
+    border-left-width: 6px; /* Prominent accent border */
+    border-left-style: solid;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08); /* Subtle, modern shadow */
+    display: flex; /* Enable flexbox for icon + text layout */
+    align-items: center; /* Vertically center icon and text */
+    gap: 1.25rem; /* Space between icon and text content */
+    position: relative; /* For potential absolute positioned elements inside if needed */
+    border-top: 1px solid #F1F3F5; /* Light top border */
+    border-right: 1px solid #F1F3F5; /* Light right border */
+    border-bottom: 1px solid #F1F3F5; /* Light bottom border */
+}
+
+/* General icon styling using ::before pseudo-element */
+/* Assumes an icon font library like FontAwesome is available and configured. */
+/* The actual icon (content property) and color will be set in .success and .error variants. */
+.message-container::before {
+    font-family: "Font Awesome 5 Free", "FontAwesome", sans-serif; /* Specify your icon font family */
+    font-weight: 900; /* Typically for solid icons in FontAwesome */
+    font-size: 2rem; /* Icon size */
+    line-height: 1; /* Ensure icon aligns well */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.message-container.success {
+    /* NEW STYLES - Replacing the green theme with brand colors */
+    background-color: #FFF7F7;  /* Very light pink/red, subtly hinting at the brand's primary red */
+    color: #6A0000; /* Darker, rich red for text, ensuring good readability on the light background */
+    border-left-color: #FF5757; /* Main brand accent red for the prominent left border */
+    border-top: 1px solid #FFEEEE; /* Lighter, brand-themed top border */
+    border-right: 1px solid #FFEEEE; /* Lighter, brand-themed right border */
+    border-bottom: 1px solid #FFEEEE; /* Lighter, brand-themed bottom border */
+    box-shadow: 0 7px 22px rgba(230, 72, 72, 0.2); /* Softer, branded shadow with a hint of red */
+    padding: 1.75rem 2.25rem; /* Slightly adjusted padding for a refined look */
+}
+
+.message-container.success::before {
+    /* NEW STYLES - Updating icon color to match brand */
+    content: "\f058"; /* FontAwesome unicode for check-circle (tick icon) */
+    color: #FF5757; /* Main brand accent color for the icon */
+    font-size: 2.1rem; /* Slightly adjusted icon size for better visual balance */
+}
+
+.message-container.error {
+    background-color: #FFF3F3; /* Very light, warning red */
+    color: #B71C1C; /* Dark, readable red for text */
+    border-left-color: #E53935; /* Strong red accent */
+    border-top-color: #FFDDDD;
+    border-right-color: #FFDDDD;
+    border-bottom-color: #FFDDDD;
+}
+
+.message-container.error::before {
+    content: "\f071"; /* FontAwesome unicode for exclamation-triangle */
+    color: #E53935; /* Match accent color */
+}
+
+/* === Loading Indicator === */
+.loading-indicator {
+    text-align: center;
+    padding: 2rem;
+    color: #6C757D;
+    font-size: 1.1rem;
+}
+
+.loading-indicator i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+/* === Responsive Design === */
 @media (min-width: 600px) {
     .selected-car-card {
         flex-direction: row; /* Image and details side-by-side */
@@ -1042,7 +1127,6 @@ body.main-content-visible #main-page-wrapper {
     }
 }
 
-/* Responsive adjustments for skewed hero with standard search filters in right content */
 @media (max-width: 992px) {
     .hero-content-wrapper {
         flex-direction: column;
@@ -1352,173 +1436,107 @@ body.main-content-visible #main-page-wrapper {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.error-message.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.price-calculation-section {
-    background-color: #F8F9FA;
-    border-radius: 8px;
-    padding: 1.5rem;
-    border: 1px solid #E9ECEF;
-}
-
-.price-calculation-section h3 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-}
-
-.price-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-}
-
-.price-row.total-price {
-    background-color: #FFFFFF;
-    padding: 1rem;
-    border-radius: 8px;
-    border: 2px solid #FF5757;
-    margin-top: 0.5rem;
-    font-size: 1.1rem;
-}
-
-.price-row.total-price span {
-    color: #FF5757;
-}
-
-/* === Reservation Form Section === */
-.reservation-form-section {
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 1px solid #F1F3F4;
-}
-
-.form-section {
+.total-price-container {
+    margin-top: 2rem;
     margin-bottom: 2rem;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #212529;
 }
 
-.form-section:last-of-type {
-    margin-bottom: 1.5rem;
+.total-price-container #total-price {
+    color: #FF5757; /* Accent for the price value */
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.form-group label {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    font-weight: 500;
-    color: #343A40;
-    font-size: 0.95rem;
-}
-
-.form-group label i {
-    color: #6C757D;
-    font-size: 0.9rem;
-}
-
-.form-group input {
-    padding: 0.875rem 1rem;
-    border: 2px solid #E9ECEF;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    background-color: #FFFFFF;
-}
-
-.form-group input:focus {
-    border-color: #FF5757;
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(255, 87, 87, 0.15);
-}
-
-.form-group input.error {
-    border-color: #DC3545;
-    background-color: #FFF5F5;
-}
-
-.error-message {
-    color: #DC3545;
-    font-size: 0.85rem;
-    margin-top: 0.25rem;
-    opacity: 0;
-    transform: translateY(-5px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.error-message.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* === Form Actions === */
 .form-actions {
     display: flex;
+    justify-content: space-between; /* Or center, or flex-end */
     gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid #E9ECEF;
+    margin-top: 1rem;
 }
 
-.form-actions .btn {
-    padding: 0.875rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    min-width: 150px;
-    justify-content: center;
+.form-actions button {
+    flex-grow: 1; /* Make buttons take equal space if desired */
+    padding: 0.8rem 1.5rem; /* Slightly larger buttons for actions */
 }
 
-.form-actions .btn i {
-    font-size: 0.9em;
-    position: relative;
-    top: 0.1em;
+/* Message Container on Reservation Page */
+#reservation-message-container p {
+    font-size: 1.05rem; /* Slightly adjusted font size */
+    padding: 1.8rem 2rem; /* Adjusted padding */
+    background-color: #FFFFFF; /* Clean white background */
+    border-radius: 10px; /* Slightly more rounded */
+    border: 1px solid #E0E6ED; /* Softer, solid border */
+    color: #343A40; /* Good contrast text color */
+    max-width: 700px;
+    margin: 2.5rem auto; /* Adjusted margin for better spacing */
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06); /* Softer shadow */
+    line-height: 1.65;
 }
 
-/* === Message Container === */
+/* === Message Container (Enhanced for Order Confirmation UX) === */
 .message-container {
-    margin-top: 2rem;
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 500;
+    margin-top: 2.5rem; /* Increased top margin */
+    padding: 2rem 2.5rem; /* Generous padding */
+    border-radius: 12px; /* Modern rounded corners */
+    font-weight: 500; /* Medium font weight */
+    text-align: left; /* Align text to the left for content flow with icon */
+    border-left-width: 6px; /* Prominent accent border */
+    border-left-style: solid;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08); /* Subtle, modern shadow */
+    display: flex; /* Enable flexbox for icon + text layout */
+    align-items: center; /* Vertically center icon and text */
+    gap: 1.25rem; /* Space between icon and text content */
+    position: relative; /* For potential absolute positioned elements inside if needed */
+    border-top: 1px solid #F1F3F5; /* Light top border */
+    border-right: 1px solid #F1F3F5; /* Light right border */
+    border-bottom: 1px solid #F1F3F5; /* Light bottom border */
+}
+
+/* General icon styling using ::before pseudo-element */
+/* Assumes an icon font library like FontAwesome is available and configured. */
+/* The actual icon (content property) and color will be set in .success and .error variants. */
+.message-container::before {
+    font-family: "Font Awesome 5 Free", "FontAwesome", sans-serif; /* Specify your icon font family */
+    font-weight: 900; /* Typically for solid icons in FontAwesome */
+    font-size: 2rem; /* Icon size */
+    line-height: 1; /* Ensure icon aligns well */
+    flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
 .message-container.success {
-    background-color: #D4EDDA;
-    color: #155724;
-    border: 1px solid #C3E6CB;
+    /* NEW STYLES - Replacing the green theme with brand colors */
+    background-color: #FFF7F7;  /* Very light pink/red, subtly hinting at the brand's primary red */
+    color: #6A0000; /* Darker, rich red for text, ensuring good readability on the light background */
+    border-left-color: #FF5757; /* Main brand accent red for the prominent left border */
+    border-top: 1px solid #FFEEEE; /* Lighter, brand-themed top border */
+    border-right: 1px solid #FFEEEE; /* Lighter, brand-themed right border */
+    border-bottom: 1px solid #FFEEEE; /* Lighter, brand-themed bottom border */
+    box-shadow: 0 7px 22px rgba(230, 72, 72, 0.2); /* Softer, branded shadow with a hint of red */
+    padding: 1.75rem 2.25rem; /* Slightly adjusted padding for a refined look */
+}
+
+.message-container.success::before {
+    /* NEW STYLES - Updating icon color to match brand */
+    content: "\f058"; /* FontAwesome unicode for check-circle (tick icon) */
+    color: #FF5757; /* Main brand accent color for the icon */
+    font-size: 2.1rem; /* Slightly adjusted icon size for better visual balance */
 }
 
 .message-container.error {
-    background-color: #F8D7DA;
-    color: #721C24;
-    border: 1px solid #F5C6CB;
+    background-color: #FFF3F3; /* Very light, warning red */
+    color: #B71C1C; /* Dark, readable red for text */
+    border-left-color: #E53935; /* Strong red accent */
+    border-top-color: #FFDDDD;
+    border-right-color: #FFDDDD;
+    border-bottom-color: #FFDDDD;
+}
+
+.message-container.error::before {
+    content: "\f071"; /* FontAwesome unicode for exclamation-triangle */
+    color: #E53935; /* Match accent color */
 }
 
 /* === Loading Indicator === */
@@ -1881,15 +1899,36 @@ body.main-content-visible #main-page-wrapper {
 }
 
 .message-container.success {
-    background-color: #D4EDDA;
-    color: #155724;
-    border: 1px solid #C3E6CB;
+    /* NEW STYLES - Replacing the green theme with brand colors */
+    background-color: #FFF7F7;  /* Very light pink/red, subtly hinting at the brand's primary red */
+    color: #6A0000; /* Darker, rich red for text, ensuring good readability on the light background */
+    border-left-color: #FF5757; /* Main brand accent red for the prominent left border */
+    border-top: 1px solid #FFEEEE; /* Lighter, brand-themed top border */
+    border-right: 1px solid #FFEEEE; /* Lighter, brand-themed right border */
+    border-bottom: 1px solid #FFEEEE; /* Lighter, brand-themed bottom border */
+    box-shadow: 0 7px 22px rgba(230, 72, 72, 0.2); /* Softer, branded shadow with a hint of red */
+    padding: 1.75rem 2.25rem; /* Slightly adjusted padding for a refined look */
+}
+
+.message-container.success::before {
+    /* NEW STYLES - Updating icon color to match brand */
+    content: "\f058"; /* FontAwesome unicode for check-circle (tick icon) */
+    color: #FF5757; /* Main brand accent color for the icon */
+    font-size: 2.1rem; /* Slightly adjusted icon size for better visual balance */
 }
 
 .message-container.error {
-    background-color: #F8D7DA;
-    color: #721C24;
-    border: 1px solid #F5C6CB;
+    background-color: #FFF3F3; /* Very light, warning red */
+    color: #B71C1C; /* Dark, readable red for text */
+    border-left-color: #E53935; /* Strong red accent */
+    border-top-color: #FFDDDD;
+    border-right-color: #FFDDDD;
+    border-bottom-color: #FFDDDD;
+}
+
+.message-container.error::before {
+    content: "\f071"; /* FontAwesome unicode for exclamation-triangle */
+    color: #E53935; /* Match accent color */
 }
 
 /* === Loading Indicator === */
@@ -1944,4 +1983,119 @@ body.main-content-visible #main-page-wrapper {
     .reservation-layout {
         gap: 1.5rem;
     }
+}
+
+/* === Order Confirmation Page - Success Message Styling === */
+#confirmation-page-section p.success-message {
+    background-color: #FFF7F7;  /* 매우 옅은 브랜드 색상 변형 */
+    color: #6A0000;             /* 텍스트용 어두운 브랜드 색상 */
+    border: 1px solid #FFD9D9;  /* 밝은 브랜드 색상 테두리 */
+    border-left: 5px solid #D32F2F; /* 왼쪽 강조를 위한 더 강한 브랜드 레드 */
+    box-shadow: 0 6px 18px rgba(211, 47, 47, 0.12); /* 브랜드 색상 힌트가 있는 부드러운 그림자 */
+    padding: 1.25rem 1.75rem;   /* 적절한 패딩 */
+    border-radius: 8px;         /* 둥근 모서리 */
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;               /* 아이콘과 텍스트 사이 간격 */
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;      /* 아래쪽 여백 추가 */
+    max-width: 750px;           /* 너비 제어 */
+    margin-left: auto;          /* 블록 가운데 정렬 */
+    margin-right: auto;         /* 블록 가운데 정렬 */
+    text-align: left !important; /* flex 아이템 내부 텍스트 왼쪽 정렬 보장 (.text-center 재정의) */
+}
+
+#confirmation-page-section p.success-message i.fa-check-circle {
+    color: #D32F2F;             /* 아이콘용 브랜드 레드 - 왼쪽 테두리와 일치 */
+    font-size: 1.8rem;          /* 아이콘 크기 */
+    line-height: 1;             /* 일관된 아이콘 정렬 보장 */
+    margin-right: 0.25rem;      /* 아이콘과 텍스트 사이 미세 조정 */
+}
+
+/* === Loading Indicator === */
+.loading-indicator {
+    text-align: center;
+    padding: 2rem;
+    color: #6C757D;
+    font-size: 1.1rem;
+}
+
+.loading-indicator i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
 } 
+
+/* === Confirmation Page Specific Styles === */
+#confirmation-page-section .section-title {
+    text-align: center;
+    margin-top: 2.5rem; /* Increased top margin for better spacing */
+    margin-bottom: 2rem; /* Adjusted bottom margin */
+    font-size: 2.25rem; /* Slightly larger font for main title */
+    color: #2C3E50; /* A strong, professional dark blue, can be adjusted to brand */
+}
+
+/* Order Summary Box Styling */
+.order-summary-box {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E6ED;
+    border-radius: 10px;
+    padding: 2rem 2.5rem; /* Increased padding */
+    margin-top: 1rem;
+    margin-bottom: 2rem; /* Added bottom margin for spacing from button */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+}
+
+.order-summary-box h3, 
+.order-summary-box h4 {
+    font-weight: 600;
+    color: #34495E; /* Slightly softer dark blue */
+    margin-top: 1.75rem; /* Spacing above category titles */
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #F1F3F5; /* Subtle separator */
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.order-summary-box h3:first-of-type {
+    margin-top: 0; /* No top margin for the very first title */
+}
+
+.order-summary-box h3 i,
+.order-summary-box h4 i {
+    color: #FF5757; /* Brand color for icons */
+    font-size: 1.1em; /* Relative to parent h3/h4 */
+}
+
+.order-summary-box .summary-item {
+    padding: 0.6rem 0; /* Vertical padding for items */
+    font-size: 0.95rem;
+    color: #555;
+    display: flex; /* For better alignment of label and value */
+    justify-content: space-between; /* Push label and value to ends */
+    border-bottom: 1px dashed #F4F6F8; /* Very subtle dashed line for items */
+}
+
+.order-summary-box .summary-item:last-child {
+    border-bottom: none; /* No border for the last item in a group */
+}
+
+.order-summary-box .summary-item strong {
+    color: #333;
+    min-width: 120px; /* Ensure labels have enough space */
+    margin-right: 1rem; /* Space between label and value */
+    font-weight: 500;
+}
+
+/* Responsive adjustments for summary items if needed */
+@media (max-width: 500px) {
+    .order-summary-box .summary-item {
+        flex-direction: column; /* Stack label and value on small screens */
+        align-items: flex-start; /* Align to start */
+    }
+    .order-summary-box .summary-item strong {
+        margin-bottom: 0.25rem; /* Space when stacked */
+    }
+}

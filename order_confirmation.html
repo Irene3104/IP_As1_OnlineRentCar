@@ -19,7 +19,7 @@
                 <nav>
                     <ul>
                         <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
-                        <li><a href="reservation.html" id="global-reservation-link"><i class="fas fa-calendar-check"></i>Reservation</a></li>
+                        <li><a href="my_reservations.html" id="global-reservation-link"><i class="fas fa-list-alt"></i>My Reservations</a></li>
                     </ul>
                 </nav>
             </div>
@@ -30,35 +30,35 @@
                 <h2 class="section-title">Order Confirmed!</h2>
                 
                 <div id="order-details-container" style="display: none;">
-                    <p>Thank you for your order. Your reservation has been successfully processed.</p>
+                    <p class="text-center success-message"><i class="fas fa-check-circle"></i> Thank you for your order. Your reservation has been successfully processed.</p>
                     <div class="order-summary-box">
-                        <h3>Reservation Summary</h3>
-                        <p><strong>Order ID:</strong> <span id="confirmed-order-id"></span></p>
-                        <p><strong>Order Date:</strong> <span id="confirmed-order-date"></span></p>
+                        <h3><i class="fas fa-receipt"></i> Reservation Summary</h3>
+                        <div class="summary-item"><strong>Order ID:</strong> <span id="confirmed-order-id"></span></div>
+                        <div class="summary-item"><strong>Order Date:</strong> <span id="confirmed-order-date"></span></div>
                         
-                        <h4>Customer Details:</h4>
-                        <p><strong>Name:</strong> <span id="confirmed-customer-name"></span></p>
-                        <p><strong>Email:</strong> <span id="confirmed-customer-email"></span></p>
-                        <p><strong>Phone:</strong> <span id="confirmed-customer-phone"></span></p>
+                        <h4><i class="fas fa-user"></i> Customer Details:</h4>
+                        <div class="summary-item"><strong>Name:</strong> <span id="confirmed-customer-name"></span></div>
+                        <div class="summary-item"><strong>Email:</strong> <span id="confirmed-customer-email"></span></div>
+                        <div class="summary-item"><strong>Phone:</strong> <span id="confirmed-customer-phone"></span></div>
                         
-                        <h4>Vehicle Details:</h4>
-                        <p><strong>Car:</strong> <span id="confirmed-car-model"></span> (<span id="confirmed-car-vin"></span>)</p>
+                        <h4><i class="fas fa-car"></i> Vehicle Details:</h4>
+                        <div class="summary-item"><strong>Car:</strong> <span id="confirmed-car-full-details"></span></div>
                         
-                        <h4>Rental Details:</h4>
-                        <p><strong>Start Date:</strong> <span id="confirmed-start-date"></span></p>
-                        <p><strong>Rental Period:</strong> <span id="confirmed-rental-period"></span> days</p>
-                        <p><strong>Total Price:</strong> $<span id="confirmed-total-price"></span></p>
+                        <h4><i class="fas fa-calendar-alt"></i> Rental Details:</h4>
+                        <div class="summary-item"><strong>Start Date:</strong> <span id="confirmed-start-date"></span></div>
+                        <div class="summary-item"><strong>Rental Period:</strong> <span id="confirmed-rental-period"></span></div>
+                        <div class="summary-item"><strong>Total Price:</strong> <span id="confirmed-total-price-with-currency"></span></div>
                     </div>
-                    <p class="text-center" style="margin-top: 20px;"><a href="index.html" class="btn btn-primary">Back to Homepage</a></p>
+                    <p class="text-center" style="margin-top: 30px;"><a href="index.html" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Homepage</a></p>
                 </div>
 
-                <div id="loading-message" style="display: none;">
-                    <p>Loading order details...</p>
+                <div id="loading-message" style="display: none;" class="text-center">
+                    <p><i class="fas fa-spinner fa-spin"></i> Loading order details...</p>
                 </div>
 
-                <div id="confirmation-error-message" style="display: none; color: red;" class="text-center">
-                    <p>Could not retrieve order details. Please check your Order ID or contact support.</p>
-                    <p><a href="index.html" class="btn btn-secondary">Back to Homepage</a></p>
+                <div id="confirmation-error-message" style="display: none; color: red;" class="text-center error-message">
+                    <p><i class="fas fa-exclamation-triangle"></i> Could not retrieve order details. Please check your Order ID or contact support.</p>
+                    <p style="margin-top: 20px;"><a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Homepage</a></p>
                 </div>
             </section>
         </main>

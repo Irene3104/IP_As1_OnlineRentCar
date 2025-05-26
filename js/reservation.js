@@ -60,20 +60,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     let suggestionsContainerHeader = null; 
 
     function getHeaderSuggestionsContainer() {
+        console.log("[Debug] getHeaderSuggestionsContainer called");
         if (!suggestionsContainerHeader) {
             const searchBarWrapper = headerSearchInput ? headerSearchInput.closest('.header-search-bar') : null;
             if (!searchBarWrapper) {
-                console.error('Header search bar wrapper (.header-search-bar) not found.');
+                console.error('[Debug] Header search bar wrapper (.header-search-bar) not found.');
                 return null;
             }
 
             const containerParent = searchBarWrapper.parentNode;
             if (!containerParent) {
-                console.error('Parent node of header search bar wrapper not found.');
+                console.error('[Debug] Parent node of header search bar wrapper not found.');
                 return null;
             }
             
-            // 제안 목록을 포함할 부모가 non-static position을 갖도록 보장합니다.
             if (window.getComputedStyle(containerParent).position === 'static') {
                 containerParent.style.position = 'relative';
             }
@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             suggestionsContainerHeader.id = 'header-suggestions-container';
             suggestionsContainerHeader.style.position = 'absolute';
             
-            // searchBarWrapper를 기준으로 위치와 크기를 설정합니다.
             suggestionsContainerHeader.style.top = (searchBarWrapper.offsetTop + searchBarWrapper.offsetHeight) + 'px'; 
             suggestionsContainerHeader.style.left = searchBarWrapper.offsetLeft + 'px';
             suggestionsContainerHeader.style.width = searchBarWrapper.offsetWidth + 'px';
@@ -90,19 +89,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             suggestionsContainerHeader.style.zIndex = '1001'; 
             suggestionsContainerHeader.style.backgroundColor = '#fff';
             suggestionsContainerHeader.style.border = '1px solid #ddd';
-            suggestionsContainerHeader.style.borderTop = 'none'; // 검색창 하단 테두리와 겹치지 않도록
+            suggestionsContainerHeader.style.borderTop = 'none';
             suggestionsContainerHeader.style.maxHeight = '280px';
             suggestionsContainerHeader.style.overflowY = 'auto';
             suggestionsContainerHeader.style.boxSizing = 'border-box';
             
             containerParent.appendChild(suggestionsContainerHeader);
+            console.log("[Debug] suggestionsContainerHeader appended to DOM:", suggestionsContainerHeader);
         }
         return suggestionsContainerHeader;
     }
 
     async function updateHeaderSearchSuggestions(term) {
+        console.log(`[Debug] updateHeaderSearchSuggestions called with term: ${term}`);
         const container = getHeaderSuggestionsContainer();
-        if (!container) return;
+        if (!container) {
+            console.error("[Debug] Suggestions container is null in updateHeaderSearchSuggestions.");
+            return;
+        }
 
         container.innerHTML = '';
         container.style.display = 'none';
@@ -155,28 +159,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                         container.style.display = 'none';
                     });
                 } else {
-                    // 대여 불가 차량 클릭 시 알림
                     li.addEventListener('click', () => {
                         alert('This car is currently rented out and cannot be selected.');
-                        container.style.display = 'none'; // 알림 후 제안 목록 숨김
+                        container.style.display = 'none';
                     });
                 }
                 ul.appendChild(li);
             });
             container.appendChild(ul);
             container.style.display = 'block';
+            console.log("[Debug] Suggestions displayed with items:", matchedCars);
         } else {
           container.innerHTML = '<p style="padding: 10px 15px; color: #6c757d;">No matches found.</p>';
           container.style.display = 'block';
+          console.log("[Debug] No suggestions found for term:", term);
         }
     }
 
     if (headerSearchInput) {
         headerSearchInput.addEventListener('input', (e) => {
+            console.log("[Debug] Header search input event. Value:", e.target.value);
             updateHeaderSearchSuggestions(e.target.value);
         });
         headerSearchInput.addEventListener('focus', (e) => { 
-            if(e.target.value.length > 0) { // Show suggestions on focus if input is not empty
+            if(e.target.value.length > 0) {
                  updateHeaderSearchSuggestions(e.target.value);
             }
         });
@@ -186,28 +192,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         headerSearchButton.addEventListener('click', () => {
             const currentSearchTerm = headerSearchInput ? headerSearchInput.value.trim() : '';
             if (currentSearchTerm) {
-                // Attempt to go to the first suggestion if list is open and has items
                 const firstSuggestionItem = suggestionsContainerHeader ? suggestionsContainerHeader.querySelector('li') : null;
                 if (firstSuggestionItem && suggestionsContainerHeader.style.display === 'block') {
                     firstSuggestionItem.click(); 
                 } else {
-                     // Fallback: go to homepage with search term (main grid search)
                     window.location.href = `index.html?search=${encodeURIComponent(currentSearchTerm)}`;
                 }
             } else {
-                // If search bar is empty, maybe focus it or do nothing
                 if(headerSearchInput) headerSearchInput.focus();
             }
         });
     }
 
-    // Hide suggestions when clicking outside the search input or the suggestions container itself
     document.addEventListener('click', function(event) {
         const container = suggestionsContainerHeader;
         if (container && headerSearchInput && 
             !headerSearchInput.contains(event.target) && 
             !container.contains(event.target) &&
-            event.target !== headerSearchButton) { // also don't hide if search button is clicked
+            event.target !== headerSearchButton) {
             container.style.display = 'none';
         }
     });
@@ -513,50 +515,42 @@ function getFormData() {
 }
 
 /**
- * Shows a message to the user.
+ * Displays a message in the reservation message container.
+ * type can be 'success', 'error', or 'info' (default).
  */
 function showMessage(message, type = 'info') {
-    // Use alert for success and error messages for more prominence
-    if (type === 'success' || type === 'error') {
-        alert(message);
+    // Revert to using alert() for all message types as per user request
+    console.log(`[showMessage] Type: ${type}, Message: ${message}`);
+    
+    if (type === 'success') {
+        // Specific success message override as per request
+        if (message.toLowerCase().includes('order submitted successfully')) {
+            message = '차량 예약이 성공적으로 완료되었습니다!';
+        }
+        alert(`Success: ${message}`);
+    } else if (type === 'error') {
+        alert(`Error: ${message}`);
+    } else {
+        alert(`Info: ${message}`);
     }
 
-    // Keep the message container for 'info' or other types if needed,
-    // or if you want a non-blocking way to show success/error as well.
+    // Hide the custom message container if it was somehow still visible or used by other parts
     const messageContainer = document.getElementById('reservation-message-container');
-    const loadingIndicator = document.getElementById('loading-indicator');
-
-    if (loadingIndicator) loadingIndicator.style.display = 'none';
-
     if (messageContainer) {
-        messageContainer.innerHTML = `<p class="${type}">${message}</p>`;
-        messageContainer.className = `message-container ${type}`;
-        messageContainer.style.display = 'block';
-
-        // For non-alert messages, hide after a few seconds
-        if (type !== 'success' && type !== 'error') {
-            setTimeout(() => {
-                if (messageContainer.innerHTML.includes(message)) { // Check if the message is still the same
-                    messageContainer.style.display = 'none';
-                    messageContainer.innerHTML = '';
-                }
-            }, 5000); // Hide after 5 seconds
-        }
-    } else {
-        console.warn('Message container not found. Could not display message:', message);
-        if (type !== 'success' && type !== 'error') { // Fallback for info if container is missing
-            alert(message); 
-        }
+        messageContainer.style.display = 'none';
+        messageContainer.innerHTML = '';
     }
 }
 
 /**
- * Hides the message container.
+ * Hides the reservation message container.
  */
 function hideMessage() {
-    const container = document.getElementById('reservation-message-container');
-    if (container) {
-        container.style.display = 'none';
+    const messageContainer = document.getElementById('reservation-message-container');
+    if (messageContainer) {
+        messageContainer.style.display = 'none';
+        messageContainer.innerHTML = ''; // Clear content
+        messageContainer.className = 'message-container'; // Reset classes
     }
 }
 

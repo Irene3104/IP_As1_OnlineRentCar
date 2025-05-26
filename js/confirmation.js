@@ -3,23 +3,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.body.classList.add('main-content-visible');
     
     const orderIdSpan = document.getElementById('confirmed-order-id');
+    console.log('orderIdSpan:', orderIdSpan);
     const orderDateSpan = document.getElementById('confirmed-order-date');
+    console.log('orderDateSpan:', orderDateSpan);
     const customerNameSpan = document.getElementById('confirmed-customer-name');
+    console.log('customerNameSpan:', customerNameSpan);
     const customerEmailSpan = document.getElementById('confirmed-customer-email');
+    console.log('customerEmailSpan:', customerEmailSpan);
     const customerPhoneSpan = document.getElementById('confirmed-customer-phone');
-    const carModelSpan = document.getElementById('confirmed-car-model');
-    const carVinSpan = document.getElementById('confirmed-car-vin');
+    console.log('customerPhoneSpan:', customerPhoneSpan);
+    const carFullDetailsSpan = document.getElementById('confirmed-car-full-details');
+    console.log('carFullDetailsSpan:', carFullDetailsSpan);
     const startDateSpan = document.getElementById('confirmed-start-date');
+    console.log('startDateSpan:', startDateSpan);
     const rentalPeriodSpan = document.getElementById('confirmed-rental-period');
-    const totalPriceSpan = document.getElementById('confirmed-total-price');
+    console.log('rentalPeriodSpan:', rentalPeriodSpan);
+    const totalPriceWithCurrencySpan = document.getElementById('confirmed-total-price-with-currency');
+    console.log('totalPriceWithCurrencySpan:', totalPriceWithCurrencySpan);
 
     const orderDetailsContainer = document.getElementById('order-details-container');
+    console.log('orderDetailsContainer:', orderDetailsContainer);
     const loadingMessageDiv = document.getElementById('loading-message');
+    console.log('loadingMessageDiv:', loadingMessageDiv);
     const errorMessageDiv = document.getElementById('confirmation-error-message');
+    console.log('errorMessageDiv:', errorMessageDiv);
 
     // Check if all necessary elements exist
     if (!orderIdSpan || !orderDateSpan || !customerNameSpan || !customerEmailSpan || !customerPhoneSpan || 
-        !carModelSpan || !carVinSpan || !startDateSpan || !rentalPeriodSpan || !totalPriceSpan || 
+        !carFullDetailsSpan || !startDateSpan || !rentalPeriodSpan || !totalPriceWithCurrencySpan || 
         !orderDetailsContainer || !loadingMessageDiv || !errorMessageDiv) {
         console.error('One or more key confirmation page elements are missing from the DOM.');
         if(errorMessageDiv) {
@@ -77,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('[Confirmation Page] orderIdFromUrl type:', typeof orderIdFromUrl);
 
         // Find the specific order
-        const foundOrder = allOrdersData.orders.find(order => order.orderId === orderIdFromUrl);
+        const foundOrder = allOrdersData.orders.find(order => order.orderId == orderIdFromUrl);
         console.log('[Confirmation Page] Found order:', foundOrder);
 
         if (foundOrder) {
@@ -107,20 +118,53 @@ document.addEventListener('DOMContentLoaded', async () => {
             customerNameSpan.textContent = order.customer.name || 'N/A';
             customerEmailSpan.textContent = order.customer.email || 'N/A';
             customerPhoneSpan.textContent = order.customer.phoneNumber || 'N/A';
-            carModelSpan.textContent = `${order.car.brand || ''} ${order.car.carModel || ''}`.trim() || 'N/A';
-            carVinSpan.textContent = order.car.vin || 'N/A';
             
-            // Format start date properly
-            if (order.rental.startDate) {
-                const startDate = new Date(order.rental.startDate + 'T00:00:00');
-                startDateSpan.textContent = startDate.toLocaleDateString();
+            // Car Full Details
+            if (carFullDetailsSpan) {
+                const brand = order.car.brand || '';
+                const model = order.car.carModel || '';
+                const vin = order.car.vin || 'N/A';
+                let carText = '';
+                if (brand || model) {
+                    carText = `${brand} ${model}`.trim();
+                    if (vin !== 'N/A') {
+                        carText += ` (VIN: ${vin})`;
+                    }
+                } else if (vin !== 'N/A') {
+                    carText = `VIN: ${vin}`;
+                } else {
+                    carText = 'N/A';
+                }
+                carFullDetailsSpan.textContent = carText;
             } else {
-                startDateSpan.textContent = 'N/A';
+                // Fallback if new element ID is not found, try to use old ones (should not happen if HTML is updated)
+                const oldCarModelSpan = document.getElementById('confirmed-car-model');
+                const oldCarVinSpan = document.getElementById('confirmed-car-vin');
+                if(oldCarModelSpan) oldCarModelSpan.textContent = `${order.car.brand || ''} ${order.car.carModel || ''}`.trim() || 'N/A';
+                if(oldCarVinSpan) oldCarVinSpan.textContent = order.car.vin || 'N/A';
             }
             
-            rentalPeriodSpan.textContent = order.rental.rentalPeriod || 'N/A';
-            totalPriceSpan.textContent = order.rental.totalPrice !== undefined ? 
-                order.rental.totalPrice.toFixed(2) : 'N/A';
+            // Format start date properly
+            if (startDateSpan) {
+                if (order.rental.startDate) {
+                    const startDate = new Date(order.rental.startDate + 'T00:00:00'); // Ensure date is parsed as local
+                    startDateSpan.textContent = startDate.toLocaleDateString(); // Format as MM/DD/YYYY or similar based on locale
+                } else {
+                    startDateSpan.textContent = 'N/A';
+                }
+            }
+            
+            if(rentalPeriodSpan) rentalPeriodSpan.textContent = order.rental.rentalPeriod || 'N/A';
+            
+            // Total Price with Currency
+            if (totalPriceWithCurrencySpan) {
+                totalPriceWithCurrencySpan.textContent = order.rental.totalPrice !== undefined ? 
+                    `$${order.rental.totalPrice.toFixed(2)}` : 'N/A';
+            } else {
+                 // Fallback for old ID
+                const oldTotalPriceSpan = document.getElementById('confirmed-total-price');
+                if(oldTotalPriceSpan) oldTotalPriceSpan.textContent = order.rental.totalPrice !== undefined ? order.rental.totalPrice.toFixed(2) : 'N/A';
+            }
             
         } catch (error) {
             console.error('Error displaying order details:', error);

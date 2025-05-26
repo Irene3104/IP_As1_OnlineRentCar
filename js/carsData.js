@@ -12,24 +12,26 @@ let ordersDataFetched = false; // 주문 데이터 로드 상태 플래그
  */
 async function fetchCarDataOnce() {
     if (carsDataFetched) {
-        // console.log('Car data already fetched.');
-        return allCarsData; // Return the already fetched data (should be an array)
+        // console.log('Car data already fetched, attempting to re-fetch for latest status...');
+        // 데이터를 항상 최신으로 유지하기 위해, carsDataFetched가 true여도 다시 fetch 시도 (캐시 옵션과 함께)
     }
     try {
         // console.log('Fetching car data...');
-        const response = await fetch('data/cars.json');
+        const response = await fetch('data/cars.json', { cache: 'no-store' }); // cache: 'no-store' 옵션 추가
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const jsonData = await response.json(); // jsonData is { cars: [...] }
-        allCarsData = jsonData.cars; // Assign the array to allCarsData
-        carsDataFetched = true;
-        // console.log('Car data fetched successfully:', allCarsData);
-        return allCarsData; // Return the array of cars
+        const jsonData = await response.json(); 
+        allCarsData = jsonData.cars; 
+        carsDataFetched = true; // 데이터는 한 번 가져왔다는 플래그는 유지하되, 내용은 매번 갱신될 수 있음
+        // console.log('Car data fetched/refreshed successfully:', allCarsData);
+        return allCarsData; 
     } catch (error) {
         console.error('Error fetching car data:', error);
-        allCarsData = []; // 에러 발생 시 빈 배열로 초기화
-        return allCarsData; // Return empty array in case of error
+        // 에러 발생 시 기존 데이터 유지 또는 빈 배열로 초기화 결정 필요
+        // 여기서는 기존 데이터를 반환하거나, 문제가 계속되면 빈 배열로 할 수 있습니다.
+        // allCarsData = []; // 이전처럼 에러 시 비우는 옵션
+        return allCarsData; // 에러 발생 시 현재 메모리에 있는 (아마도 이전의) 데이터 반환
     }
 }
 

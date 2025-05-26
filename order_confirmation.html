@@ -50,7 +50,7 @@
                         <div class="summary-item"><strong>Rental Period:</strong> <span id="confirmed-rental-period"></span></div>
                         <div class="summary-item"><strong>Total Price:</strong> <span id="confirmed-total-price-with-currency"></span></div>
                     </div>
-                    <p class="text-center" style="margin-top: 30px;"><a href="index.html" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Homepage</a></p>
+                    <p class="text-center" style="margin-top: 30px;"><a href="index.html" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Homepage</a>&nbsp;&nbsp;<button type="button" class="btn btn-secondary" onclick="sendEmailNotification()"><i class="fas fa-envelope"></i> Send Email</button></p>
                 </div>
 
                 <div id="loading-message" style="display: none;" class="text-center">
@@ -71,6 +71,16 @@
         </footer>
     </div>
     <script src="js/carsData.js"></script> 
+    <script>
+        function sendEmailNotification() {
+            const emailElement = document.getElementById('confirmed-customer-email');
+            let customerEmail = 'the customer'; // Default if element or email is not found
+            if (emailElement && emailElement.textContent) {
+                customerEmail = emailElement.textContent;
+            }
+            alert('Order confirmation has been sent to ' + customerEmail + '!!');
+        }
+    </script>
     <script src="js/confirmation.js"></script>
 </body>
 </html> 

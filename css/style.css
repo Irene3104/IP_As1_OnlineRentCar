@@ -108,6 +108,14 @@ header .container {
     min-height: 65px; /* Adjusted min-height */
 }
 
+.logo {
+    flex-shrink: 0; /* 로고 크기 유지 */
+}
+
+header nav {
+    flex-shrink: 0; /* 네비게이션 크기 유지 */
+}
+
 .logo img {
     max-height: 50px; /* Slightly smaller logo for a sleeker look */
 }
@@ -146,10 +154,84 @@ header nav ul li a.active {
     text-decoration: none;
 }
 
-header nav ul li a:hover i,
-header nav ul li a.active i {
-    color: #8B0000; /* Dark Red for Home active icon */
+/* Header 내부 요소 정렬 */
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 65px; /* 기존 값 */
+    /* position: relative; */ /* 자식 요소의 flex-grow 배치를 위해. 이미 flex 이므로 필요 없을 수 있음 */
 }
+
+.logo {
+    flex-shrink: 0; /* 로고 크기 유지 */
+}
+
+header nav {
+    flex-shrink: 0; /* 네비게이션 크기 유지 */
+}
+
+/* 헤더 내 검색창 스타일 */
+.header-search-bar { /* .simple-search-bar-wrapper 에 추가된 클래스 */
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* 로고와 nav 사이의 남은 공간 차지 */
+    max-width: 500px; /* 검색창 최대 너비 (조정 가능) */
+    margin: 0 2rem; /* 좌우 여백 */
+    background-color: #f0f0f0; /* 약간 다른 배경색 */
+    border-radius: 25px; /* 더 둥글게 */
+    /* box-shadow: 0 1px 5px rgba(0,0,0,0.1); */ /* 그림자 제거 또는 약하게 */
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+#reservation-page-search-input { /* ID는 유지 */
+    flex-grow: 1;
+    padding: 0.55rem 1rem; /* 헤더에 맞게 패딩 조정 */
+    font-size: 0.85rem; /* 헤더에 맞게 폰트 크기 조정 */
+    border: none;
+    outline: none;
+    color: #212529;
+    background-color: transparent;
+}
+
+#reservation-page-search-input::placeholder {
+    color: #6c757d; /* 약간 더 진한 placeholder */
+}
+
+#reservation-page-search-button { /* ID는 유지 */
+    padding: 0.55rem 1rem; /* 헤더에 맞게 패딩 조정 */
+    font-size: 0.85rem; /* 헤더에 맞게 폰트 크기 조정 */
+    border: none;
+    background-color: #FF5757; /* 빨간색 계열 (예: .btn-primary 기본색) */
+    color: #ffffff;
+    cursor: pointer;
+    /* border-radius: 0 25px 25px 0; */ /* 전체 wrapper가 둥글므로 제거 */
+    transition: background-color 0.2s ease;
+}
+
+#reservation-page-search-button:hover {
+    background-color: #E04848; /* 빨간색 계열 호버 */
+}
+
+/* 기존 #reservation-search-bar-section 및 .simple-search-bar-wrapper 관련 스타일은 제거 또는 주석 처리 */
+/* 예를 들어, 이전에 추가했던 이 부분들은 제거합니다. */
+/*
+#reservation-search-bar-section {
+    padding-top: 2rem; 
+    padding-bottom: 1rem; 
+    background-color: #f8f9fa; 
+    border-bottom: 1px solid #e9ecef; 
+}
+
+.simple-search-bar-wrapper { 
+    max-width: 800px; 
+    margin: 0 auto; 
+    background-color: #fff; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+*/
 
 /* Specifically style reservation link if needed for emphasis */
 #global-reservation-link:hover,
@@ -751,6 +833,10 @@ body.main-content-visible #main-page-wrapper {
 }
 
 /* === Reservation Page Specific Styles === */
+#reservation-page-section {
+    padding-top: 3rem; /* 제목 위에 공백 추가 */
+}
+
 #reservation-page-section .section-title {
     text-align: center;
     margin-bottom: 3rem; /* More space after title */
@@ -807,10 +893,16 @@ body.main-content-visible #main-page-wrapper {
 }
 
 .selected-car-price {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #FF5757; /* Accent color for price */
-    margin-bottom: 0.3rem;
+    /* background-color: #FF5757; */ /* 배경색 제거 */
+    background-color: transparent !important; 
+    color: #FF5757 !important; /* 텍스트 색상으로 강조 */
+    padding: 0.25rem 0 !important; /* 패딩 조정 */
+    border-radius: 0 !important; /* 불필요한 속성 제거 */
+    text-align: left !important; /* 왼쪽 정렬 또는 부모에 맞게 */
+    font-size: 1.2rem !important; /* 기존 크기 유지 또는 조정 */
+    font-weight: 700 !important; /* 가격이므로 굵게 */
+    margin-top: 0.5rem !important; /* 기존 유지 또는 조정 */
+    border: none !important; /* 테두리 제거 */
 }
 .selected-car-price .per-day {
     font-size: 0.85rem;
@@ -1223,7 +1315,7 @@ body.main-content-visible #main-page-wrapper {
     font-weight: 500;
     margin-bottom: 0.5rem;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.5rem;
 }
 
@@ -1255,11 +1347,14 @@ body.main-content-visible #main-page-wrapper {
     color: #DC3545;
     font-size: 0.85rem;
     margin-top: 0.25rem;
-    display: none;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .error-message.show {
-    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .price-calculation-section {
@@ -1288,32 +1383,130 @@ body.main-content-visible #main-page-wrapper {
 }
 
 .price-row.total-price {
-    border-top: 2px solid #E9ECEF;
+    background-color: #FFFFFF;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 2px solid #FF5757;
     margin-top: 0.5rem;
-    padding-top: 1rem;
     font-size: 1.1rem;
 }
 
+.price-row.total-price span {
+    color: #FF5757;
+}
+
+/* === Reservation Form Section === */
+.reservation-form-section {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #F1F3F4;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section:last-of-type {
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #343A40;
+    font-size: 0.95rem;
+}
+
+.form-group label i {
+    color: #6C757D;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    padding: 0.875rem 1rem;
+    border: 2px solid #E9ECEF;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #FFFFFF;
+}
+
+.form-group input:focus {
+    border-color: #FF5757;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(255, 87, 87, 0.15);
+}
+
+.form-group input.error {
+    border-color: #DC3545;
+    background-color: #FFF5F5;
+}
+
+.error-message {
+    color: #DC3545;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.error-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* === Form Actions === */
 .form-actions {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
-    margin-top: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #E9ECEF;
 }
 
 .form-actions .btn {
-    padding: 0.8rem 2rem;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
     font-weight: 600;
-    display: flex;
-    align-items: center;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: baseline;
     gap: 0.5rem;
+    min-width: 150px;
+    justify-content: center;
 }
 
+.form-actions .btn i {
+    font-size: 0.9em;
+    position: relative;
+    top: 0.1em;
+}
+
+/* === Message Container === */
 .message-container {
-    padding: 1rem;
-    border-radius: 6px;
-    margin: 1rem 0;
-    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
 }
 
 .message-container.success {
@@ -1328,236 +1521,115 @@ body.main-content-visible #main-page-wrapper {
     border: 1px solid #F5C6CB;
 }
 
+/* === Loading Indicator === */
 .loading-indicator {
     text-align: center;
     padding: 2rem;
     color: #6C757D;
+    font-size: 1.1rem;
 }
 
 .loading-indicator i {
-    font-size: 1.5rem;
     margin-right: 0.5rem;
-}
-
-/* === Order Confirmation Page Styles === */
-.confirmation-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.success-icon {
-    font-size: 4rem;
-    color: #28A745;
-    margin-bottom: 1rem;
-}
-
-.confirmation-subtitle {
-    color: #6C757D;
-    font-size: 1.1rem;
-    margin-top: 0.5rem;
-}
-
-.confirmation-details {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.order-summary-card {
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    overflow: hidden;
-    margin-bottom: 2rem;
-}
-
-.card-header {
-    background-color: #FF5757;
-    color: #FFFFFF;
-    padding: 1.5rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.card-header h3 {
-    margin: 0;
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.order-id-badge {
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-}
-
-.card-content {
-    padding: 2rem;
-}
-
-.detail-section {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #E9ECEF;
-}
-
-.detail-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.detail-section h4 {
-    color: #343A40;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.detail-section h4 i {
-    color: #FF5757;
-}
-
-.detail-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-}
-
-.detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-}
-
-.detail-item .label {
-    color: #6C757D;
-    font-weight: 500;
-}
-
-.detail-item .value {
-    color: #212529;
-    font-weight: 600;
-}
-
-.price-section {
-    background-color: #F8F9FA;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin: 1rem 0;
-}
-
-.total-price {
     font-size: 1.2rem;
-    color: #FF5757;
 }
 
-.confirmation-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 2rem;
+/* === Responsive Design === */
+@media (max-width: 992px) {
+    .reservation-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .reservation-left-column {
+        order: 2;
+    }
+    
+    .reservation-right-column {
+        order: 1;
+    }
 }
 
-.confirmation-actions .btn {
-    padding: 0.8rem 2rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.loading-state {
-    text-align: center;
-    padding: 3rem;
-    color: #6C757D;
-}
-
-.loading-spinner {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.error-state {
-    text-align: center;
-    padding: 3rem;
-    color: #721C24;
-}
-
-.error-icon {
-    font-size: 3rem;
-    color: #DC3545;
-    margin-bottom: 1rem;
-}
-
-.error-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 2rem;
-}
-
-/* === Responsive Design for Reservation Pages === */
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
     
-    .selected-car-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    
     .form-actions {
         flex-direction: column;
     }
     
-    .confirmation-actions {
-        flex-direction: column;
-        align-items: center;
+    .form-actions .btn {
+        width: 100%;
     }
     
-    .detail-grid {
-        grid-template-columns: 1fr;
+    .selected-vehicle-section,
+    .price-calculation-section,
+    .reservation-form-section {
+        padding: 1.5rem;
     }
     
-    .card-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
+    .reservation-layout {
+        gap: 1.5rem;
     }
 }
 
 /* === Reservation Page Layout - 2 Column Design === */
 .reservation-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 3rem;
-    margin-top: 2rem;
+    display: grid; 
+    grid-template-columns: 1fr 1.5fr; 
+    gap: 3rem; 
+    margin-top: 2rem; 
+    align-items: stretch; /* 컬럼들이 같은 높이를 가지도록 시도 */
 }
 
 .reservation-left-column {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2rem; 
 }
 
 .reservation-right-column {
+    display: flex; 
+    flex-direction: column; 
+    /* gap: 2rem;  gap은 section header 등 내부 요소에서 관리 */
+}
+
+.reservation-form-section { /* Customer Information 컨테이너 */
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #F1F3F4;
+    flex-grow: 1; /* 오른쪽 컬럼 내에서 남은 공간을 모두 차지 */
+    display: flex; 
+    flex-direction: column;
+}
+
+#reservation-form { /* form 요소 자체도 늘어나야 함 */
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
+}
+
+#reservation-form .form-section:last-of-type {
+    /* Rental Details 섹션이 form 내부에서 공간을 차지하도록 */
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column;
+}
+
+#reservation-form .form-actions {
+    margin-top: auto; /* 버튼 그룹을 폼 하단으로 밀어냄 */
+    /* padding-top: 2rem; 이미 존재 */
+    /* border-top: 1px solid #E9ECEF; 이미 존재 */
 }
 
 /* === Section Headers === */
 .section-header {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
@@ -1566,7 +1638,9 @@ body.main-content-visible #main-page-wrapper {
 
 .section-header i {
     color: #FF5757;
-    font-size: 1.2rem;
+    font-size: 1.1rem; 
+    position: relative; 
+    top: 0.12em;
 }
 
 .section-header h3,
@@ -1582,18 +1656,28 @@ body.main-content-visible #main-page-wrapper {
 }
 
 /* === Selected Vehicle Section === */
-.selected-vehicle-section {
+.selected-vehicle-section { /* id="selected-car-info-container" */
     background-color: #FFFFFF;
     border-radius: 12px;
     padding: 2rem;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     border: 1px solid #F1F3F4;
+    display: flex; 
+    flex-direction: column;
+    flex-grow: 1; 
 }
 
-.selected-car-card {
+.selected-vehicle-section .section-header {
+    border-bottom: 1px solid #E9ECEF; /* 약한 구분선 또는 none */
+    padding-bottom: 1rem; 
+    margin-bottom: 1.5rem; 
+}
+
+#selected-car-card {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    flex-direction: column; 
+    gap: 1.5rem; 
+    flex-grow: 1; 
 }
 
 .selected-car-image {
@@ -1714,7 +1798,7 @@ body.main-content-visible #main-page-wrapper {
 
 .form-group label {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.5rem;
     font-weight: 500;
     color: #343A40;
@@ -1775,11 +1859,17 @@ body.main-content-visible #main-page-wrapper {
     font-size: 1rem;
     font-weight: 600;
     border-radius: 8px;
-    display: flex;
-    align-items: center;
+    display: inline-flex;
+    align-items: baseline;
     gap: 0.5rem;
     min-width: 150px;
     justify-content: center;
+}
+
+.form-actions .btn i {
+    font-size: 0.9em;
+    position: relative;
+    top: 0.1em;
 }
 
 /* === Message Container === */

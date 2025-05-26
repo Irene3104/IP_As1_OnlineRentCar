@@ -53,6 +53,165 @@ document.addEventListener('DOMContentLoaded', async () => {
         showMessage('Please select a car from our fleet to make a reservation.', 'error');
         hideForm();
     }
+
+    // ======== Header Search Functionality START ==========
+    const headerSearchInput = document.getElementById('reservation-page-search-input');
+    const headerSearchButton = document.getElementById('reservation-page-search-button');
+    let suggestionsContainerHeader = null; 
+
+    function getHeaderSuggestionsContainer() {
+        if (!suggestionsContainerHeader) {
+            const searchBarWrapper = headerSearchInput ? headerSearchInput.closest('.header-search-bar') : null;
+            if (!searchBarWrapper) {
+                console.error('Header search bar wrapper (.header-search-bar) not found.');
+                return null;
+            }
+
+            const containerParent = searchBarWrapper.parentNode;
+            if (!containerParent) {
+                console.error('Parent node of header search bar wrapper not found.');
+                return null;
+            }
+            
+            // 제안 목록을 포함할 부모가 non-static position을 갖도록 보장합니다.
+            if (window.getComputedStyle(containerParent).position === 'static') {
+                containerParent.style.position = 'relative';
+            }
+
+            suggestionsContainerHeader = document.createElement('div');
+            suggestionsContainerHeader.id = 'header-suggestions-container';
+            suggestionsContainerHeader.style.position = 'absolute';
+            
+            // searchBarWrapper를 기준으로 위치와 크기를 설정합니다.
+            suggestionsContainerHeader.style.top = (searchBarWrapper.offsetTop + searchBarWrapper.offsetHeight) + 'px'; 
+            suggestionsContainerHeader.style.left = searchBarWrapper.offsetLeft + 'px';
+            suggestionsContainerHeader.style.width = searchBarWrapper.offsetWidth + 'px';
+            
+            suggestionsContainerHeader.style.zIndex = '1001'; 
+            suggestionsContainerHeader.style.backgroundColor = '#fff';
+            suggestionsContainerHeader.style.border = '1px solid #ddd';
+            suggestionsContainerHeader.style.borderTop = 'none'; // 검색창 하단 테두리와 겹치지 않도록
+            suggestionsContainerHeader.style.maxHeight = '280px';
+            suggestionsContainerHeader.style.overflowY = 'auto';
+            suggestionsContainerHeader.style.boxSizing = 'border-box';
+            
+            containerParent.appendChild(suggestionsContainerHeader);
+        }
+        return suggestionsContainerHeader;
+    }
+
+    async function updateHeaderSearchSuggestions(term) {
+        const container = getHeaderSuggestionsContainer();
+        if (!container) return;
+
+        container.innerHTML = '';
+        container.style.display = 'none';
+
+        if (!term || term.length < 1) return;
+
+        if (!allCarsData || allCarsData.length === 0) {
+            console.log('Fetching car data for header search...');
+            await fetchCarDataOnce(); 
+        }
+        if (!allCarsData || allCarsData.length === 0) {
+            console.warn('Car data unavailable for header search.');
+            return; 
+        }
+
+        const lowerTerm = term.toLowerCase();
+        const matchedCars = allCarsData.filter(car =>
+            car.brand.toLowerCase().includes(lowerTerm) ||
+            car.carModel.toLowerCase().includes(lowerTerm) ||
+            car.carType.toLowerCase().includes(lowerTerm)
+        ).slice(0, 7); 
+
+        if (matchedCars.length > 0) {
+            const ul = document.createElement('ul');
+            ul.style.listStyle = 'none';
+            ul.style.padding = '0';
+            ul.style.margin = '0';
+
+            matchedCars.forEach(car => {
+                const li = document.createElement('li');
+                const isAvailable = car.available;
+
+                li.innerHTML = `
+                    <div style="padding: 10px 15px; cursor: ${isAvailable ? 'pointer' : 'not-allowed'}; border-bottom: 1px solid #eee; ${!isAvailable ? 'opacity: 0.6;' : ''}">
+                        <strong>${car.brand} ${car.carModel}</strong> (${car.carType})
+                        <small style="color: ${isAvailable ? '#28a745' : '#dc3545'}; float: right; font-weight: bold;">
+                            ${isAvailable ? 'Available' : 'Rented Out'}
+                        </small>
+                    </div>
+                `;
+                
+                if (isAvailable) {
+                    li.addEventListener('mouseover', () => li.style.backgroundColor = '#f9f9f9');
+                    li.addEventListener('mouseout', () => li.style.backgroundColor = '#fff');
+                    
+                    li.addEventListener('click', () => {
+                        if (car.vin) {
+                            window.location.href = `reservation.html?vin=${car.vin}`;
+                        }
+                        container.style.display = 'none';
+                    });
+                } else {
+                    // 대여 불가 차량 클릭 시 알림
+                    li.addEventListener('click', () => {
+                        alert('This car is currently rented out and cannot be selected.');
+                        container.style.display = 'none'; // 알림 후 제안 목록 숨김
+                    });
+                }
+                ul.appendChild(li);
+            });
+            container.appendChild(ul);
+            container.style.display = 'block';
+        } else {
+          container.innerHTML = '<p style="padding: 10px 15px; color: #6c757d;">No matches found.</p>';
+          container.style.display = 'block';
+        }
+    }
+
+    if (headerSearchInput) {
+        headerSearchInput.addEventListener('input', (e) => {
+            updateHeaderSearchSuggestions(e.target.value);
+        });
+        headerSearchInput.addEventListener('focus', (e) => { 
+            if(e.target.value.length > 0) { // Show suggestions on focus if input is not empty
+                 updateHeaderSearchSuggestions(e.target.value);
+            }
+        });
+    }
+
+    if (headerSearchButton) {
+        headerSearchButton.addEventListener('click', () => {
+            const currentSearchTerm = headerSearchInput ? headerSearchInput.value.trim() : '';
+            if (currentSearchTerm) {
+                // Attempt to go to the first suggestion if list is open and has items
+                const firstSuggestionItem = suggestionsContainerHeader ? suggestionsContainerHeader.querySelector('li') : null;
+                if (firstSuggestionItem && suggestionsContainerHeader.style.display === 'block') {
+                    firstSuggestionItem.click(); 
+                } else {
+                     // Fallback: go to homepage with search term (main grid search)
+                    window.location.href = `index.html?search=${encodeURIComponent(currentSearchTerm)}`;
+                }
+            } else {
+                // If search bar is empty, maybe focus it or do nothing
+                if(headerSearchInput) headerSearchInput.focus();
+            }
+        });
+    }
+
+    // Hide suggestions when clicking outside the search input or the suggestions container itself
+    document.addEventListener('click', function(event) {
+        const container = suggestionsContainerHeader;
+        if (container && headerSearchInput && 
+            !headerSearchInput.contains(event.target) && 
+            !container.contains(event.target) &&
+            event.target !== headerSearchButton) { // also don't hide if search button is clicked
+            container.style.display = 'none';
+        }
+    });
+    // ======== Header Search Functionality END ==========
 });
 
 /**
@@ -357,18 +516,37 @@ function getFormData() {
  * Shows a message to the user.
  */
 function showMessage(message, type = 'info') {
-    const container = document.getElementById('reservation-message-container');
-    if (!container) return;
+    // Use alert for success and error messages for more prominence
+    if (type === 'success' || type === 'error') {
+        alert(message);
+    }
 
-    container.className = `message-container ${type}`;
-    container.innerHTML = `<p>${message}</p>`;
-    container.style.display = 'block';
+    // Keep the message container for 'info' or other types if needed,
+    // or if you want a non-blocking way to show success/error as well.
+    const messageContainer = document.getElementById('reservation-message-container');
+    const loadingIndicator = document.getElementById('loading-indicator');
 
-    // Auto-hide success messages after 5 seconds
-    if (type === 'success') {
-        setTimeout(() => {
-            hideMessage();
-        }, 5000);
+    if (loadingIndicator) loadingIndicator.style.display = 'none';
+
+    if (messageContainer) {
+        messageContainer.innerHTML = `<p class="${type}">${message}</p>`;
+        messageContainer.className = `message-container ${type}`;
+        messageContainer.style.display = 'block';
+
+        // For non-alert messages, hide after a few seconds
+        if (type !== 'success' && type !== 'error') {
+            setTimeout(() => {
+                if (messageContainer.innerHTML.includes(message)) { // Check if the message is still the same
+                    messageContainer.style.display = 'none';
+                    messageContainer.innerHTML = '';
+                }
+            }, 5000); // Hide after 5 seconds
+        }
+    } else {
+        console.warn('Message container not found. Could not display message:', message);
+        if (type !== 'success' && type !== 'error') { // Fallback for info if container is missing
+            alert(message); 
+        }
     }
 }
 
